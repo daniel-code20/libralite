@@ -1,0 +1,109 @@
+/* Contenedor principal del formulario */
+.login-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Contenedor de la imagen */
+.login-image {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: floatAnimation 1s ease-in-out infinite alternate;
+}
+
+@keyframes floatAnimation {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Formulario de inicio de sesión */
+.login-form {
+  flex: 1;
+  padding: 48px;
+  background-color: rgb(19, 19, 19);
+}
+
+/* Icono */
+.icon-container {
+  display: flex;
+  align-items: center;
+  color: rgb(46, 206, 255);
+}
+
+/* Título */
+
+.h1-container img {
+  margin-left: 10px;
+}
+
+/* Logo */
+.logo-image {
+  width: 45px;
+  margin-bottom: 12px;
+}
+
+/* Descripción */
+.p-bienvenida {
+  font-weight: 400;
+  color: #b0b0b0;
+  font-size: 12px;
+}
+
+/* Grupo de formulario */
+.span-create-account {
+  color: #b0b0b0;
+  text-decoration: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.p-crear-cuenta {
+  margin-top: 16px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.login-form p span {
+  margin-right: 10px;
+}
+
+.btn-google {
+  color: white;
+}
+.btn-google img {
+  width: 24px;
+  margin-right: 10px;
+}
+
+.input-color {
+  color: #ffffff;
+}
+
+
+
+p {
+  color: #ff4848;
+}
+
+.h1-login {
+  margin-bottom: 12px;
+}
+
+/* Media query para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+  .login-image {
+    display: none;
+  }
+  .login-form {
+    justify-content: center;
+  }
+}

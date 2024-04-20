@@ -1,0 +1,101 @@
+/* Contenedor principal del formulario */
+.crear-cuenta-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Contenedor de la imagen */
+.imagen-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: floatAnimation 1s ease-in-out infinite alternate;
+}
+
+@keyframes floatAnimation {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Formulario de Crear Cuenta */
+.crear-cuenta-form {
+  flex: 1;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  background-color: rgb(19, 19, 19);
+}
+
+/* Descripción */
+.p-bienvenida {
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #b0b0b0;
+  font-size: 16px;
+}
+
+/* Grupo de formulario */
+.form-group {
+  width: 100%;
+}
+
+/* Botón de Crear Cuenta */
+.btn-crear-cuenta {
+  background-color: rgb(0, 98, 245);
+  color: white;
+  border: none;
+  transition: box-shadow 0.3s;
+}
+
+.btn-crear-cuenta:hover {
+  box-shadow: 0 0 10px 3px rgba(0, 149, 255, 0.39);
+}
+
+/* Botón de Google */
+.btn-google img {
+  width: 24px;
+  margin-right: 10px;
+}
+
+/* Enlace para crear cuenta */
+.span-create-account {
+  color: #b0b0b0;
+  text-decoration: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.p-iniciar-sesion{
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.crear-cuenta-form p span {
+  margin-right: 10px;
+}
+
+.h1-signup{
+  margin-bottom: 12px;
+}
+
+/* Media query para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+  .imagen-container {
+    display: none;
+  }
+
+  .crear-cuenta-form {
+   justify-content: center;
+  }
+}

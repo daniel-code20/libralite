@@ -1,0 +1,29 @@
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 10px;
+  width: 80%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Estilos adicionales para centrar el input en pantallas pequeñas */
+@media (max-width: 600px) {
+  .search-bar-container {
+    flex-direction: column; /* Cambiar a dirección de columna */
+    align-items: center; /* Centrar verticalmente */
+  }
+
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px; /* Espacio entre el input y el botón */
+  }
+}
