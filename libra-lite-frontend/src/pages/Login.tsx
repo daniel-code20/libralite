@@ -39,9 +39,9 @@ export const Login = () => {
     try {
       const user = await authenticateUser(data.email, data.password);
       if (user.role === UserRoles.ADMIN) {
-        navigate('/dashboard');
+        navigate('/admin-principal');
       } else {
-        navigate('/dashboard');
+        navigate('/admin-principal');
       }
     } catch (error) {
       setError('Correo o contraseña inválidos');
@@ -61,7 +61,7 @@ export const Login = () => {
         <div className="login-form">
           <div className="icon-container">
             <img src={logoImg} alt="logo" className="logo-image" />
-            <h3 className='font-bold h3-login'>LibraLite</h3>
+            <h3 className='font-bold bg-gradient-to-tr from-blue-500 to-cyan-400  shadow-lg text-transparent bg-clip-text loading-noreal'>LibraLite</h3>
           </div>
           <div className="h1-container">
             <h1 style={{ color: 'white' }} className="text-2xl font-bold h1-login ">¡Bienvenido a LibraLite!</h1>
@@ -110,7 +110,7 @@ export const Login = () => {
             </FormItem>
             <Button
               radius="sm"
-              className="max-w-lg bg-gradient-to-tr from-blue-500 to-purple-500 text-white shadow-lg"
+              className="max-w-lg bg-gradient-to-tr from-blue-500 to-cyan-400  text-white shadow-lg"
               type="submit"
               style={{ height: '50px'}}
             >
@@ -135,7 +135,7 @@ export const Login = () => {
           </Form>
           <p className="p-crear-cuenta">
             <span className="span-create-account">¿No tienes una cuenta?</span>
-            <Link to="/signup">Crear Cuenta</Link>
+            <Link to="/signup" className='bg-gradient-to-tr from-blue-500 to-cyan-400 shadow-lg text-transparent bg-clip-text loading-noreal'>Crear Cuenta</Link>
           </p>
         </div>
       </div>

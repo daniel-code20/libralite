@@ -42,8 +42,10 @@ export default withAuth(
     lists,
     session,
     server: {
-      cors: { origin: ['http://localhost:5173'], credentials: true },
+      cors: { origin: '*', credentials: true,  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']},
       port: 3000,
+      maxFileSize: 200 * 1024 * 1024,
+     
     },
     storage: {
       my_local_images: {
@@ -52,7 +54,7 @@ export default withAuth(
         // This store is used for the image field type
         type: 'image',
         // The URL that is returned in the Keystone GraphQL API
-        generateUrl: path => `${baseUrl}/images${path}`,
+        generateUrl: (path) => `${baseUrl}/images${path}`,
         // The route that will be created in Keystone's backend to serve the images
         serverRoute: {
           path: '/images',
@@ -61,6 +63,6 @@ export default withAuth(
         // serverRoute: null
         storagePath: 'public/images',
       },
-    }
+    },
   })
 );

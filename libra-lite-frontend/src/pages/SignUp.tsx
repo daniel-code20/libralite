@@ -12,7 +12,7 @@ import { Button } from '@nextui-org/button';
 import logoImg from '../assets/Logo1.png';
 import '../styles/signUp.css';
 
-const SignUp = () => {
+export const SignUp = () => {
   type FormValues = {
     name: string;
     email: string;
@@ -70,7 +70,7 @@ const SignUp = () => {
       <div className="crear-cuenta-form">
         <div className="icon-container">
           <img src={logoImg} alt="logo" className="logo-image" />
-          <h3 className="font-bold h3-signup">LibraLite</h3>
+          <h3 className="font-bold bg-gradient-to-tr from-blue-500 to-cyan-400  shadow-lg text-transparent bg-clip-text loading-noreal">LibraLite</h3>
         </div>
         <div className="h1-container">
             <h1 style={{ color: 'white' }} className="text-2xl font-bold h1-signup">Crear Cuenta</h1>
@@ -148,7 +148,7 @@ const SignUp = () => {
             {error && <p>{error}</p>}
             <Button
               radius="sm"
-              className="max-w-lg bg-gradient-to-tr from-blue-500 to-purple-500 text-white shadow-lg"
+              className="max-w-lg bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
               type="submit"
               style={{ height: '50px' }}
             >
@@ -174,7 +174,7 @@ const SignUp = () => {
         </div>
         <p className="p-iniciar-sesion">
           <span className="span-create-account">¿Ya tienes una cuenta?</span>
-          <Link to="/login">Iniciar Sesión</Link>
+          <Link to="/login" className='bg-gradient-to-tr from-blue-500 to-cyan-400 shadow-lg text-transparent bg-clip-text loading-noreal'>Iniciar Sesión</Link>
         </p>
       </div>
       <div className="imagen-container">
@@ -184,4 +184,3 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;

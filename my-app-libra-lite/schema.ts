@@ -9,6 +9,7 @@ import {
   PublisherConfigList,
   ReservationConfigList,
   ReviewConfigList,
+  SucursalConfigList,
 } from "./lists/";
 
 export const lists: Lists = {
@@ -27,4 +28,7 @@ export const lists: Lists = {
   Reservation: list(ReservationConfigList),
 
   Review: list(ReviewConfigList),
+
+  Sucursal: list(SucursalConfigList),
+
 };

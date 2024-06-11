@@ -6,3 +6,4 @@ export * from './ReviewConfigList';
 export * from './AuthorConfigList';
 export * from './CategoryConfigList';
 export * from './PublisherConfigList';
+export * from './SucursalConfigList';

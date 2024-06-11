@@ -1,20 +1,35 @@
-import { NextUIProvider } from "@nextui-org/react";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import ReactDOM from "react-dom/client";
-import "./styles.css";
-import { createFragmentRegistry } from "@apollo/client/cache";
-import { AUTHOR_FRAGMENT, BOOK_FRAGMENT } from "./graphql/fragment";
-import { App } from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { NextUIProvider } from '@nextui-org/react';
+import { ApolloClient, InMemoryCache, ApolloProvider,ApolloLink  } from '@apollo/client';
+import { setContext } from "@apollo/client/link/context";
+import ReactDOM from 'react-dom/client';
+import './styles.css';
+import { App } from './App';
+import { BrowserRouter } from 'react-router-dom';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'; 
+import React from 'react';
 
-const client = new ApolloClient({
-  uri: "http://localhost:3000/api/graphql",
-  cache: new InMemoryCache({
-    fragments: createFragmentRegistry(AUTHOR_FRAGMENT, BOOK_FRAGMENT),
-  }),
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token');
+  const csrfToken = localStorage.getItem('csrfToken');
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : '',
+      'x-csrf-token': csrfToken || '',
+    },
+  };
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root") as Element);
+const uploadLink = createUploadLink({
+  uri: 'http://localhost:3000/api/graphql',
+});
+
+const client = new ApolloClient({
+  link: ApolloLink.from([authLink, uploadLink]),
+  cache: new InMemoryCache(),
+});
+
+const root = ReactDOM.createRoot(document.getElementById('root') as Element);
 
 root.render(
   <ApolloProvider client={client}>

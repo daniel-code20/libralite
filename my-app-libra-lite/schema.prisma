@@ -12,35 +12,43 @@ generator client {
 }
 
 model Book {
-  id                    String        @id @default(cuid())
-  title                 String        @default("")
-  edition               Int           @default(1)
-  author                Author?       @relation("Book_author", fields: [authorId], references: [id])
-  authorId              String?       @map("author")
-  quantity              Int?          @default(0)
-  price                 Int?          @default(0)
-  image_filesize        Int?
-  image_extension       String?
-  image_width           Int?
-  image_height          Int?
-  image_id              String?
-  from_Buy_book         Buy[]         @relation("Buy_book")
-  from_Reservation_book Reservation[] @relation("Reservation_book")
-  from_Review_book      Review[]      @relation("Review_book")
+  id               String        @id @default(cuid())
+  title            String        @default("")
+  description      String        @default("")
+  gender           String        @default("")
+  edition          Int           @default(1)
+  author           Author?       @relation("Book_author", fields: [authorId], references: [id])
+  authorId         String?       @map("author")
+  category         Category?     @relation("Book_category", fields: [categoryId], references: [id])
+  categoryId       String?       @map("category")
+  quantity         Int?          @default(0)
+  price            Int?          @default(0)
+  image_id         String?
+  image_filesize   Int?
+  image_width      Int?
+  image_height     Int?
+  image_extension  String?
+  compras          Buy[]         @relation("Buy_libro")
+  publisher        Publisher?    @relation("Book_publisher", fields: [publisherId], references: [id])
+  publisherId      String?       @map("publisher")
+  reservations     Reservation[] @relation("Reservation_book")
+  from_Review_book Review[]      @relation("Review_book")
 
   @@index([authorId])
+  @@index([categoryId])
+  @@index([publisherId])
 }
 
 model User {
-  id                    String        @id @default(cuid())
-  name                  String        @default("")
-  email                 String        @unique @default("")
-  password              String
-  createdAt             DateTime?     @default(now())
-  role                  String?       @default("CLIENT")
-  from_Buy_user         Buy[]         @relation("Buy_user")
-  from_Reservation_user Reservation[] @relation("Reservation_user")
-  from_Review_user      Review[]      @relation("Review_user")
+  id               String        @id @default(cuid())
+  name             String        @default("")
+  email            String        @unique @default("")
+  password         String
+  createdAt        DateTime?     @default(now())
+  role             String?       @default("CLIENT")
+  compras          Buy[]         @relation("Buy_cliente")
+  reservations     Reservation[] @relation("Reservation_user")
+  from_Review_user Review[]      @relation("Review_user")
 }
 
 model Author {
@@ -51,23 +59,32 @@ model Author {
 }
 
 model Buy {
-  id           String    @id @default(cuid())
-  book         Book?     @relation("Buy_book", fields: [bookId], references: [id])
-  bookId       String?   @map("book")
-  user         User?     @relation("Buy_user", fields: [userId], references: [id])
-  userId       String?   @map("user")
-  quantity     Int?
-  price        Int?
-  purchaseDate DateTime? @default(now())
+  id             String   @id @default(cuid())
+  cliente        User?    @relation("Buy_cliente", fields: [clienteId], references: [id])
+  clienteId      String?  @map("cliente")
+  libro          Book?    @relation("Buy_libro", fields: [libroId], references: [id])
+  libroId        String?  @map("libro")
+  fechaCompra    DateTime @default(now())
+  cantidad       Int      @default(1)
+  estadoEnvio    String?  @default("PENDIENTE")
+  direccionEnvio String   @default("")
+  codigoPostal   String   @default("")
+  ciudad         String   @default("")
+  telefono       String   @default("")
 
-  @@index([bookId])
-  @@index([userId])
+  @@index([clienteId])
+  @@index([libroId])
 }
 
 model Category {
-  id          String @id @default(cuid())
-  name        String @default("")
-  description String @default("")
+  id              String  @id @default(cuid())
+  name            String  @default("")
+  books           Book[]  @relation("Book_category")
+  image_id        String?
+  image_filesize  Int?
+  image_width     Int?
+  image_height    Int?
+  image_extension String?
 }
 
 model Publisher {
@@ -75,6 +92,7 @@ model Publisher {
   name    String @default("")
   address String @default("")
   contact String @default("")
+  books   Book[] @relation("Book_publisher")
 }
 
 model Reservation {
@@ -85,9 +103,12 @@ model Reservation {
   userId          String?   @map("user")
   status          String?   @default("PENDING")
   reservationDate DateTime? @default(now())
+  sucursal        Sucursal? @relation("Reservation_sucursal", fields: [sucursalId], references: [id])
+  sucursalId      String?   @map("sucursal")
 
   @@index([bookId])
   @@index([userId])
+  @@index([sucursalId])
 }
 
 model Review {
@@ -101,4 +122,13 @@ model Review {
 
   @@index([bookId])
   @@index([userId])
+}
+
+model Sucursal {
+  id                        String        @id @default(cuid())
+  name                      String        @default("")
+  address                   String        @default("")
+  city                      String        @default("")
+  postal                    String        @default("")
+  from_Reservation_sucursal Reservation[] @relation("Reservation_sucursal")
 }

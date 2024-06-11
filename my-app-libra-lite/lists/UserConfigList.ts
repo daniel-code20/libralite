@@ -5,6 +5,7 @@ import {
   password,
   timestamp,
   select,
+  relationship
 } from "@keystone-6/core/fields";
 
 export const UserConfigList: ListConfig<any> = {
@@ -30,7 +31,10 @@ export const UserConfigList: ListConfig<any> = {
       ui: {
         displayMode: "segmented-control",
       },
-    })
+    }),
+
+    compras: relationship({ ref: "Buy.cliente", many: true }),
+    reservations: relationship({ ref: "Reservation.user", many: true }),
   },
   access: allowAll,
 };

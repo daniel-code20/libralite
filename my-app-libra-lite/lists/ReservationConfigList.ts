@@ -4,8 +4,8 @@ import { timestamp, relationship, select } from "@keystone-6/core/fields";
 
 export const ReservationConfigList: ListConfig<any> = {
   fields: {
-    book: relationship({ ref: "Book" }),
-    user: relationship({ ref: "User" }),
+    book: relationship({ ref: "Book.reservations" }),
+    user: relationship({ ref: "User.reservations" }),
     status: select({
       options: [
         { label: "Pendiente", value: "PENDING" },
@@ -18,6 +18,7 @@ export const ReservationConfigList: ListConfig<any> = {
       },
     }),
     reservationDate: timestamp({ defaultValue: { kind: "now" } }),
+    sucursal: relationship({ ref: "Sucursal", many: false }),
   },
   access: allowAll,
 };

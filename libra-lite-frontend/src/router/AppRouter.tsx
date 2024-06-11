@@ -1,10 +1,16 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { Login } from "../pages/Login";
-import SignUp from "../pages/SignUp";
-import { AdminPage } from "../pages/adminPage";
-import { ClientPage } from "../pages/clientPage";
-import BookList from "../pages/DashboardPage";
-
+import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+  PrincipalPage,
+  BookDetail,
+  CategoryDetail,
+  BuyPage,
+  ReservationPage,
+  Login,
+  SignUp,
+} from '../pages/';
+import { AdminPrincipalPage } from '../admin/pages/AdminPrincipalPage';
+import { AdminCategoryDetail } from '../admin/pages/AdminCategoryDetail';
+import { AdminBookDetail } from '../admin/pages/AdminBookDetail';
 
 
 export const AppRouter = () => {
@@ -14,9 +20,14 @@ export const AppRouter = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
-        <Route path="admin" element={<AdminPage/>} />
-        <Route path="client" element={<ClientPage />} />
-        <Route path="dashboard" element={<BookList />} />
+        <Route path="principal" element={<PrincipalPage />} />
+        <Route path="admin-principal" element={<AdminPrincipalPage />} />
+        <Route path="/book/:id" element={<BookDetail />} />
+        <Route path="/admin-book/:id" element={<AdminBookDetail />} />
+        <Route path="/category/:id" element={<CategoryDetail />} />
+        <Route path="/admin-category/:id" element={<AdminCategoryDetail />} />
+        <Route path="/buy/:id" element={<BuyPage />} />
+        <Route path="/reservation/:id" element={<ReservationPage />} />
       </Routes>
     </>
   );

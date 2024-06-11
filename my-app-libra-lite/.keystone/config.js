@@ -44,11 +44,17 @@ var import_fields = require("@keystone-6/core/fields");
 var BookConfigList = {
   fields: {
     title: (0, import_fields.text)({ validation: { isRequired: true } }),
+    description: (0, import_fields.text)({ validation: { isRequired: true } }),
+    gender: (0, import_fields.text)({ validation: { isRequired: true } }),
     edition: (0, import_fields.integer)({ validation: { isRequired: true }, defaultValue: 1 }),
     author: (0, import_fields.relationship)({ ref: "Author.books", many: false }),
+    category: (0, import_fields.relationship)({ ref: "Category.books", many: false }),
     quantity: (0, import_fields.integer)({ defaultValue: 0 }),
     price: (0, import_fields.integer)({ defaultValue: 0 }),
-    image: (0, import_fields.image)({ storage: "my_local_images" })
+    image: (0, import_fields.image)({ storage: "my_local_images" }),
+    compras: (0, import_fields.relationship)({ ref: "Buy.libro", many: true }),
+    publisher: (0, import_fields.relationship)({ ref: "Publisher.books", many: false }),
+    reservations: (0, import_fields.relationship)({ ref: "Reservation.book", many: true })
   },
   access: import_access.allowAll
 };
@@ -76,7 +82,9 @@ var UserConfigList = {
       ui: {
         displayMode: "segmented-control"
       }
-    })
+    }),
+    compras: (0, import_fields2.relationship)({ ref: "Buy.cliente", many: true }),
+    reservations: (0, import_fields2.relationship)({ ref: "Reservation.user", many: true })
   },
   access: import_access2.allowAll
 };
@@ -86,8 +94,8 @@ var import_access3 = require("@keystone-6/core/access");
 var import_fields3 = require("@keystone-6/core/fields");
 var ReservationConfigList = {
   fields: {
-    book: (0, import_fields3.relationship)({ ref: "Book" }),
-    user: (0, import_fields3.relationship)({ ref: "User" }),
+    book: (0, import_fields3.relationship)({ ref: "Book.reservations" }),
+    user: (0, import_fields3.relationship)({ ref: "User.reservations" }),
     status: (0, import_fields3.select)({
       options: [
         { label: "Pendiente", value: "PENDING" },
@@ -99,7 +107,8 @@ var ReservationConfigList = {
         displayMode: "segmented-control"
       }
     }),
-    reservationDate: (0, import_fields3.timestamp)({ defaultValue: { kind: "now" } })
+    reservationDate: (0, import_fields3.timestamp)({ defaultValue: { kind: "now" } }),
+    sucursal: (0, import_fields3.relationship)({ ref: "Sucursal", many: false })
   },
   access: import_access3.allowAll
 };
@@ -109,11 +118,58 @@ var import_fields4 = require("@keystone-6/core/fields");
 var import_access4 = require("@keystone-6/core/access");
 var BuyConfigList = {
   fields: {
-    book: (0, import_fields4.relationship)({ ref: "Book" }),
-    user: (0, import_fields4.relationship)({ ref: "User" }),
-    quantity: (0, import_fields4.integer)(),
-    price: (0, import_fields4.integer)(),
-    purchaseDate: (0, import_fields4.timestamp)({ defaultValue: { kind: "now" } })
+    cliente: (0, import_fields4.relationship)({
+      ref: "User.compras",
+      many: false,
+      ui: {
+        displayMode: "cards",
+        cardFields: ["name", "email"],
+        inlineCreate: { fields: ["name", "email"] },
+        inlineEdit: { fields: ["name", "email"] }
+      }
+    }),
+    libro: (0, import_fields4.relationship)({
+      ref: "Book.compras",
+      many: false,
+      ui: {
+        displayMode: "cards",
+        cardFields: ["title", "author"],
+        inlineCreate: { fields: ["title", "author"] },
+        inlineEdit: { fields: ["title", "author"] }
+      }
+    }),
+    fechaCompra: (0, import_fields4.timestamp)({
+      defaultValue: { kind: "now" },
+      validation: { isRequired: true }
+    }),
+    cantidad: (0, import_fields4.integer)({
+      defaultValue: 1,
+      validation: { isRequired: true, min: 1 }
+    }),
+    estadoEnvio: (0, import_fields4.select)({
+      options: [
+        { label: "Pendiente", value: "PENDIENTE" },
+        { label: "En Proceso", value: "EN_PROCESO" },
+        { label: "Enviado", value: "ENVIADO" },
+        { label: "Entregado", value: "ENTREGADO" }
+      ],
+      defaultValue: "PENDIENTE",
+      ui: {
+        displayMode: "segmented-control"
+      }
+    }),
+    direccionEnvio: (0, import_fields4.text)({
+      validation: { isRequired: true }
+    }),
+    codigoPostal: (0, import_fields4.text)({
+      validation: { isRequired: true }
+    }),
+    ciudad: (0, import_fields4.text)({
+      validation: { isRequired: true }
+    }),
+    telefono: (0, import_fields4.text)({
+      validation: { isRequired: true }
+    })
   },
   access: import_access4.allowAll
 };
@@ -149,7 +205,8 @@ var import_access7 = require("@keystone-6/core/access");
 var CategoryConfigList = {
   fields: {
     name: (0, import_fields7.text)(),
-    description: (0, import_fields7.text)()
+    books: (0, import_fields7.relationship)({ ref: "Book.category", many: true }),
+    image: (0, import_fields7.image)({ storage: "my_local_images" })
   },
   access: import_access7.allowAll
 };
@@ -159,11 +216,25 @@ var import_fields8 = require("@keystone-6/core/fields");
 var import_access8 = require("@keystone-6/core/access");
 var PublisherConfigList = {
   fields: {
-    name: (0, import_fields8.text)(),
+    name: (0, import_fields8.text)({ validation: { isRequired: true } }),
     address: (0, import_fields8.text)(),
-    contact: (0, import_fields8.text)()
+    contact: (0, import_fields8.text)(),
+    books: (0, import_fields8.relationship)({ ref: "Book.publisher", many: true })
   },
   access: import_access8.allowAll
+};
+
+// lists/SucursalConfigList.ts
+var import_fields9 = require("@keystone-6/core/fields");
+var import_access9 = require("@keystone-6/core/access");
+var SucursalConfigList = {
+  fields: {
+    name: (0, import_fields9.text)({ validation: { isRequired: true } }),
+    address: (0, import_fields9.text)({ validation: { isRequired: true } }),
+    city: (0, import_fields9.text)({ validation: { isRequired: true } }),
+    postal: (0, import_fields9.text)({ validation: { isRequired: true } })
+  },
+  access: import_access9.allowAll
 };
 
 // schema.ts
@@ -175,7 +246,8 @@ var lists = {
   Category: (0, import_core.list)(CategoryConfigList),
   Publisher: (0, import_core.list)(PublisherConfigList),
   Reservation: (0, import_core.list)(ReservationConfigList),
-  Review: (0, import_core.list)(ReviewConfigList)
+  Review: (0, import_core.list)(ReviewConfigList),
+  Sucursal: (0, import_core.list)(SucursalConfigList)
 };
 
 // auth.ts
@@ -237,8 +309,9 @@ var keystone_default = withAuth(
     lists,
     session,
     server: {
-      cors: { origin: ["http://localhost:5173"], credentials: true },
-      port: 3e3
+      cors: { origin: "*", credentials: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"] },
+      port: 3e3,
+      maxFileSize: 200 * 1024 * 1024
     },
     storage: {
       my_local_images: {

@@ -4,11 +4,19 @@
 type Book {
   id: ID!
   title: String
+  description: String
+  gender: String
   edition: Int
   author: Author
+  category: Category
   quantity: Int
   price: Int
   image: ImageFieldOutput
+  compras(where: BuyWhereInput! = {}, orderBy: [BuyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BuyWhereUniqueInput): [Buy!]
+  comprasCount(where: BuyWhereInput! = {}): Int
+  publisher: Publisher
+  reservations(where: ReservationWhereInput! = {}, orderBy: [ReservationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReservationWhereUniqueInput): [Reservation!]
+  reservationsCount(where: ReservationWhereInput! = {}): Int
 }
 
 type ImageFieldOutput {
@@ -37,10 +45,16 @@ input BookWhereInput {
   NOT: [BookWhereInput!]
   id: IDFilter
   title: StringFilter
+  description: StringFilter
+  gender: StringFilter
   edition: IntFilter
   author: AuthorWhereInput
+  category: CategoryWhereInput
   quantity: IntNullableFilter
   price: IntNullableFilter
+  compras: BuyManyRelationFilter
+  publisher: PublisherWhereInput
+  reservations: ReservationManyRelationFilter
 }
 
 input IDFilter {
@@ -104,9 +118,23 @@ input IntNullableFilter {
   not: IntNullableFilter
 }
 
+input BuyManyRelationFilter {
+  every: BuyWhereInput
+  some: BuyWhereInput
+  none: BuyWhereInput
+}
+
+input ReservationManyRelationFilter {
+  every: ReservationWhereInput
+  some: ReservationWhereInput
+  none: ReservationWhereInput
+}
+
 input BookOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  description: OrderDirection
+  gender: OrderDirection
   edition: OrderDirection
   quantity: OrderDirection
   price: OrderDirection
@@ -119,16 +147,28 @@ enum OrderDirection {
 
 input BookUpdateInput {
   title: String
+  description: String
+  gender: String
   edition: Int
   author: AuthorRelateToOneForUpdateInput
+  category: CategoryRelateToOneForUpdateInput
   quantity: Int
   price: Int
   image: ImageFieldInput
+  compras: BuyRelateToManyForUpdateInput
+  publisher: PublisherRelateToOneForUpdateInput
+  reservations: ReservationRelateToManyForUpdateInput
 }
 
 input AuthorRelateToOneForUpdateInput {
   create: AuthorCreateInput
   connect: AuthorWhereUniqueInput
+  disconnect: Boolean
+}
+
+input CategoryRelateToOneForUpdateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -139,6 +179,26 @@ input ImageFieldInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
+input BuyRelateToManyForUpdateInput {
+  disconnect: [BuyWhereUniqueInput!]
+  set: [BuyWhereUniqueInput!]
+  create: [BuyCreateInput!]
+  connect: [BuyWhereUniqueInput!]
+}
+
+input PublisherRelateToOneForUpdateInput {
+  create: PublisherCreateInput
+  connect: PublisherWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ReservationRelateToManyForUpdateInput {
+  disconnect: [ReservationWhereUniqueInput!]
+  set: [ReservationWhereUniqueInput!]
+  create: [ReservationCreateInput!]
+  connect: [ReservationWhereUniqueInput!]
+}
+
 input BookUpdateArgs {
   where: BookWhereUniqueInput!
   data: BookUpdateInput!
@@ -146,16 +206,42 @@ input BookUpdateArgs {
 
 input BookCreateInput {
   title: String
+  description: String
+  gender: String
   edition: Int
   author: AuthorRelateToOneForCreateInput
+  category: CategoryRelateToOneForCreateInput
   quantity: Int
   price: Int
   image: ImageFieldInput
+  compras: BuyRelateToManyForCreateInput
+  publisher: PublisherRelateToOneForCreateInput
+  reservations: ReservationRelateToManyForCreateInput
 }
 
 input AuthorRelateToOneForCreateInput {
   create: AuthorCreateInput
   connect: AuthorWhereUniqueInput
+}
+
+input CategoryRelateToOneForCreateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+}
+
+input BuyRelateToManyForCreateInput {
+  create: [BuyCreateInput!]
+  connect: [BuyWhereUniqueInput!]
+}
+
+input PublisherRelateToOneForCreateInput {
+  create: PublisherCreateInput
+  connect: PublisherWhereUniqueInput
+}
+
+input ReservationRelateToManyForCreateInput {
+  create: [ReservationCreateInput!]
+  connect: [ReservationWhereUniqueInput!]
 }
 
 type User {
@@ -165,6 +251,10 @@ type User {
   password: PasswordState
   createdAt: DateTime
   role: String
+  compras(where: BuyWhereInput! = {}, orderBy: [BuyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BuyWhereUniqueInput): [Buy!]
+  comprasCount(where: BuyWhereInput! = {}): Int
+  reservations(where: ReservationWhereInput! = {}, orderBy: [ReservationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReservationWhereUniqueInput): [Reservation!]
+  reservationsCount(where: ReservationWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -187,6 +277,8 @@ input UserWhereInput {
   email: StringFilter
   createdAt: DateTimeNullableFilter
   role: StringNullableFilter
+  compras: BuyManyRelationFilter
+  reservations: ReservationManyRelationFilter
 }
 
 input DateTimeNullableFilter {
@@ -228,6 +320,8 @@ input UserUpdateInput {
   password: String
   createdAt: DateTime
   role: String
+  compras: BuyRelateToManyForUpdateInput
+  reservations: ReservationRelateToManyForUpdateInput
 }
 
 input UserUpdateArgs {
@@ -241,6 +335,8 @@ input UserCreateInput {
   password: String
   createdAt: DateTime
   role: String
+  compras: BuyRelateToManyForCreateInput
+  reservations: ReservationRelateToManyForCreateInput
 }
 
 type Author {
@@ -308,11 +404,15 @@ input BookRelateToManyForCreateInput {
 
 type Buy {
   id: ID!
-  book: Book
-  user: User
-  quantity: Int
-  price: Int
-  purchaseDate: DateTime
+  cliente: User
+  libro: Book
+  fechaCompra: DateTime
+  cantidad: Int
+  estadoEnvio: String
+  direccionEnvio: String
+  codigoPostal: String
+  ciudad: String
+  telefono: String
 }
 
 input BuyWhereUniqueInput {
@@ -324,37 +424,60 @@ input BuyWhereInput {
   OR: [BuyWhereInput!]
   NOT: [BuyWhereInput!]
   id: IDFilter
-  book: BookWhereInput
-  user: UserWhereInput
-  quantity: IntNullableFilter
-  price: IntNullableFilter
-  purchaseDate: DateTimeNullableFilter
+  cliente: UserWhereInput
+  libro: BookWhereInput
+  fechaCompra: DateTimeFilter
+  cantidad: IntFilter
+  estadoEnvio: StringNullableFilter
+  direccionEnvio: StringFilter
+  codigoPostal: StringFilter
+  ciudad: StringFilter
+  telefono: StringFilter
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeFilter
 }
 
 input BuyOrderByInput {
   id: OrderDirection
-  quantity: OrderDirection
-  price: OrderDirection
-  purchaseDate: OrderDirection
+  fechaCompra: OrderDirection
+  cantidad: OrderDirection
+  estadoEnvio: OrderDirection
+  direccionEnvio: OrderDirection
+  codigoPostal: OrderDirection
+  ciudad: OrderDirection
+  telefono: OrderDirection
 }
 
 input BuyUpdateInput {
-  book: BookRelateToOneForUpdateInput
-  user: UserRelateToOneForUpdateInput
-  quantity: Int
-  price: Int
-  purchaseDate: DateTime
-}
-
-input BookRelateToOneForUpdateInput {
-  create: BookCreateInput
-  connect: BookWhereUniqueInput
-  disconnect: Boolean
+  cliente: UserRelateToOneForUpdateInput
+  libro: BookRelateToOneForUpdateInput
+  fechaCompra: DateTime
+  cantidad: Int
+  estadoEnvio: String
+  direccionEnvio: String
+  codigoPostal: String
+  ciudad: String
+  telefono: String
 }
 
 input UserRelateToOneForUpdateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input BookRelateToOneForUpdateInput {
+  create: BookCreateInput
+  connect: BookWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -364,16 +487,15 @@ input BuyUpdateArgs {
 }
 
 input BuyCreateInput {
-  book: BookRelateToOneForCreateInput
-  user: UserRelateToOneForCreateInput
-  quantity: Int
-  price: Int
-  purchaseDate: DateTime
-}
-
-input BookRelateToOneForCreateInput {
-  create: BookCreateInput
-  connect: BookWhereUniqueInput
+  cliente: UserRelateToOneForCreateInput
+  libro: BookRelateToOneForCreateInput
+  fechaCompra: DateTime
+  cantidad: Int
+  estadoEnvio: String
+  direccionEnvio: String
+  codigoPostal: String
+  ciudad: String
+  telefono: String
 }
 
 input UserRelateToOneForCreateInput {
@@ -381,10 +503,17 @@ input UserRelateToOneForCreateInput {
   connect: UserWhereUniqueInput
 }
 
+input BookRelateToOneForCreateInput {
+  create: BookCreateInput
+  connect: BookWhereUniqueInput
+}
+
 type Category {
   id: ID!
   name: String
-  description: String
+  books(where: BookWhereInput! = {}, orderBy: [BookOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BookWhereUniqueInput): [Book!]
+  booksCount(where: BookWhereInput! = {}): Int
+  image: ImageFieldOutput
 }
 
 input CategoryWhereUniqueInput {
@@ -397,18 +526,18 @@ input CategoryWhereInput {
   NOT: [CategoryWhereInput!]
   id: IDFilter
   name: StringFilter
-  description: StringFilter
+  books: BookManyRelationFilter
 }
 
 input CategoryOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  description: OrderDirection
 }
 
 input CategoryUpdateInput {
   name: String
-  description: String
+  books: BookRelateToManyForUpdateInput
+  image: ImageFieldInput
 }
 
 input CategoryUpdateArgs {
@@ -418,7 +547,8 @@ input CategoryUpdateArgs {
 
 input CategoryCreateInput {
   name: String
-  description: String
+  books: BookRelateToManyForCreateInput
+  image: ImageFieldInput
 }
 
 type Publisher {
@@ -426,6 +556,8 @@ type Publisher {
   name: String
   address: String
   contact: String
+  books(where: BookWhereInput! = {}, orderBy: [BookOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BookWhereUniqueInput): [Book!]
+  booksCount(where: BookWhereInput! = {}): Int
 }
 
 input PublisherWhereUniqueInput {
@@ -440,6 +572,7 @@ input PublisherWhereInput {
   name: StringFilter
   address: StringFilter
   contact: StringFilter
+  books: BookManyRelationFilter
 }
 
 input PublisherOrderByInput {
@@ -453,6 +586,7 @@ input PublisherUpdateInput {
   name: String
   address: String
   contact: String
+  books: BookRelateToManyForUpdateInput
 }
 
 input PublisherUpdateArgs {
@@ -464,6 +598,7 @@ input PublisherCreateInput {
   name: String
   address: String
   contact: String
+  books: BookRelateToManyForCreateInput
 }
 
 type Reservation {
@@ -472,6 +607,7 @@ type Reservation {
   user: User
   status: String
   reservationDate: DateTime
+  sucursal: Sucursal
 }
 
 input ReservationWhereUniqueInput {
@@ -487,6 +623,7 @@ input ReservationWhereInput {
   user: UserWhereInput
   status: StringNullableFilter
   reservationDate: DateTimeNullableFilter
+  sucursal: SucursalWhereInput
 }
 
 input ReservationOrderByInput {
@@ -500,6 +637,13 @@ input ReservationUpdateInput {
   user: UserRelateToOneForUpdateInput
   status: String
   reservationDate: DateTime
+  sucursal: SucursalRelateToOneForUpdateInput
+}
+
+input SucursalRelateToOneForUpdateInput {
+  create: SucursalCreateInput
+  connect: SucursalWhereUniqueInput
+  disconnect: Boolean
 }
 
 input ReservationUpdateArgs {
@@ -512,6 +656,12 @@ input ReservationCreateInput {
   user: UserRelateToOneForCreateInput
   status: String
   reservationDate: DateTime
+  sucursal: SucursalRelateToOneForCreateInput
+}
+
+input SucursalRelateToOneForCreateInput {
+  create: SucursalCreateInput
+  connect: SucursalWhereUniqueInput
 }
 
 type Review {
@@ -560,6 +710,56 @@ input ReviewCreateInput {
   user: UserRelateToOneForCreateInput
   rating: Int
   comment: String
+}
+
+type Sucursal {
+  id: ID!
+  name: String
+  address: String
+  city: String
+  postal: String
+}
+
+input SucursalWhereUniqueInput {
+  id: ID
+}
+
+input SucursalWhereInput {
+  AND: [SucursalWhereInput!]
+  OR: [SucursalWhereInput!]
+  NOT: [SucursalWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  address: StringFilter
+  city: StringFilter
+  postal: StringFilter
+}
+
+input SucursalOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  address: OrderDirection
+  city: OrderDirection
+  postal: OrderDirection
+}
+
+input SucursalUpdateInput {
+  name: String
+  address: String
+  city: String
+  postal: String
+}
+
+input SucursalUpdateArgs {
+  where: SucursalWhereUniqueInput!
+  data: SucursalUpdateInput!
+}
+
+input SucursalCreateInput {
+  name: String
+  address: String
+  city: String
+  postal: String
 }
 
 """
@@ -616,6 +816,12 @@ type Mutation {
   updateReviews(data: [ReviewUpdateArgs!]!): [Review]
   deleteReview(where: ReviewWhereUniqueInput!): Review
   deleteReviews(where: [ReviewWhereUniqueInput!]!): [Review]
+  createSucursal(data: SucursalCreateInput!): Sucursal
+  createSucursals(data: [SucursalCreateInput!]!): [Sucursal]
+  updateSucursal(where: SucursalWhereUniqueInput!, data: SucursalUpdateInput!): Sucursal
+  updateSucursals(data: [SucursalUpdateArgs!]!): [Sucursal]
+  deleteSucursal(where: SucursalWhereUniqueInput!): Sucursal
+  deleteSucursals(where: [SucursalWhereUniqueInput!]!): [Sucursal]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -663,6 +869,9 @@ type Query {
   reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
   review(where: ReviewWhereUniqueInput!): Review
   reviewsCount(where: ReviewWhereInput! = {}): Int
+  sucursals(where: SucursalWhereInput! = {}, orderBy: [SucursalOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SucursalWhereUniqueInput): [Sucursal!]
+  sucursal(where: SucursalWhereUniqueInput!): Sucursal
+  sucursalsCount(where: SucursalWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
