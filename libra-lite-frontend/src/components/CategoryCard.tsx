@@ -30,43 +30,40 @@ export const CategoryCard = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center h-screen animate__animated animate__fadeIn">
-      <div
-        style={{ padding: '16px', width: 'calc(100% - 80px)', height: '500px'}}
-      >
-
-      <h1 className="text-2xl font-bold mb-6 text-white">Categorías</h1>
-        <div className="gap-2 grid grid-cols-2 sm:grid-cols-3">
-          {data.categories.map((item: Category) => (
-            <Link to={`/category/${item.id}`} key={item.id}>
-              <Card className="max-w-[400px] bg-zinc-800 shadow-xl mb-6">
-                <CardHeader className="flex gap-3">
-                  <Image
-                    alt="nextui logo"
-                    height={40}
-                    radius="sm"
-                    src={item.image.url ? item.image.url : 'No image'}
-                    width={40}
-                  />
-                  <div className="flex flex-col">
-                    <p className="font-bold text-lg text-white line-clamp-2">
-                      {item.name ? item.name : 'No Category'}
+      <div className="flex flex-col items-center justify-center min-h-screen animate__animated animate__fadeIn">
+        <div className="px-8 w-full max-w-[1200px]">
+          <h1 className="text-2xl font-bold mb-6 text-white">Categorías</h1>
+          <div className="gap-4 grid grid-cols-2 sm:grid-cols-3 ">
+            {data.categories.map((item: Category) => (
+              <Link to={`/category/${item.id}`} key={item.id}>
+                <Card className="max-w-[400px] bg-zinc-800 shadow-xl mb-6">
+                  <CardHeader className="flex gap-3">
+                    <Image
+                      alt="category image"
+                      height={40}
+                      radius="sm"
+                      src={item.image.url ? item.image.url : 'No image'}
+                      width={40}
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-bold text-lg text-white line-clamp-2">
+                        {item.name ? item.name : 'No Category'}
+                      </p>
+                    </div>
+                  </CardHeader>
+                  <Divider />
+                  <CardBody>
+                    <p className="text-lg text-white">
+                      Make beautiful websites regardless of your design
+                      experience.
                     </p>
-                  </div>
-                </CardHeader>
-                <Divider />
-                <CardBody>
-                  <p className="text-lg text-white">
-                    Make beautiful websites regardless of your design
-                    experience.
-                  </p>
-                </CardBody>
-                <Divider />
-              </Card>
-            </Link>
-          ))}
+                  </CardBody>
+                  <Divider />
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

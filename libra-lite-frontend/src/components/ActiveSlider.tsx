@@ -78,7 +78,7 @@ export const ActiveSlider = () => {
 
   return (
     <div className="flex items-start justify-center mb-24 animate__animated animate__fadeIn">
-      <div style={{ padding: '16px', width: 'calc(100% - 80px)', height: '100px' }}>
+      <div style={{ padding: '16px', width: 'calc(100% - 80px)' }}>
         <h2 className="text-2xl font-bold mb-6 text-white">Recomendados</h2>
         <Swiper
           breakpoints={{
@@ -86,7 +86,7 @@ export const ActiveSlider = () => {
               slidesPerView: 1,
               spaceBetween: 15,
             },
-            40: {
+            640: {
               slidesPerView: 2,
               spaceBetween: 15,
             },

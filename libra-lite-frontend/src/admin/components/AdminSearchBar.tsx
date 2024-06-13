@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Input } from '@nextui-org/react';
-import { SearchIcon } from '../components/SearchIcon';
-import { SearchResult } from './SearchResult';
+import { SearchIcon } from '../../components/SearchIcon';
+import { AdminSearchResult } from './../components/AdminSearchResult';
 
-export const SearchBar = () => {
+export const AdminSearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
 
@@ -50,7 +50,7 @@ export const SearchBar = () => {
         />
         {showResults && (
           <div className="absolute top-full left-0 w-full z-50">
-            <SearchResult searchTerm={searchTerm} />
+            <AdminSearchResult searchTerm={searchTerm} />
           </div>
         )}
       </div>

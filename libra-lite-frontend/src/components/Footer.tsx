@@ -1,9 +1,6 @@
 import React from 'react';
 
-
 export const Footer = () => {
-
-
   return (
     <footer className="bg-zinc-800 text-white p-4">
       <div className="container mx-auto">
