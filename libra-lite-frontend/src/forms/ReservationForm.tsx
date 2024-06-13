@@ -1,13 +1,12 @@
+import DropDown from '../components/DropDown';
 import { Input } from '@nextui-org/react';
-import React from 'react';
+import React, { useState } from 'react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
 import Swal from 'sweetalert2';
-
 
 interface PaymentFormProps {
   children?: React.ReactNode;
   onSubmit: () => void;
-
 }
 
 type FormValues = {
@@ -15,10 +14,8 @@ type FormValues = {
   cardName: string;
   expiryDate: string;
   cvv: string;
-  postal: string;
-  address: string;
-  phone: string;
-  city: string;
+  sucursal: string;
+  reservationDate: string;
 };
 
 const validations: FormValidations<FormValues> = {
@@ -31,18 +28,6 @@ const validations: FormValidations<FormValues> = {
   expiryDate: {
     required: 'La fecha de expiración es requerida',
   },
-  postal: {
-    required: 'El código postal es requerido',
-  },
-  address: {
-    required: 'La dirección es requerida',
-  },
-  phone: {
-    required: 'El número de teléfono es requerido',
-  },
-  city: {
-    required: 'La ciudad es requerida',
-  },
   cvv: {
     required: 'El CVV es requerido',
     validate(value) {
@@ -51,29 +36,38 @@ const validations: FormValidations<FormValues> = {
       }
     },
   },
+  sucursal: {
+    required: 'La sucursal es requerida',
+  },
+  reservationDate: {
+    required: 'La fecha limite para retirar el libro es requerida',
+  },
 };
 
-export const PaymentForm: React.FC<PaymentFormProps> = ({
+export const ReservationForm: React.FC<PaymentFormProps> = ({
   children,
-  onSubmit
+  onSubmit,
 }) => {
- 
+  const [selectedSucursal, setSelectedSucursal] = useState<string>('');
+
   const handleSubmit = (data: FormValues) => {
     Swal.fire({
-      title: '¡Muchas Gracias!',
-      text: 'Tu pedido va en camino',
+      title: '¡Excelente!',
+      text: 'Reservación éxitosa',
       icon: 'success',
-      confirmButtonText: "Ok"
+      confirmButtonText: 'Ok',
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '/principal'; 
-        
+        window.location.href = '/principal';
       }
     });
     console.log('Payment Information:', data);
     onSubmit();
   };
 
+  const handleSelectSucursal = (sucursal: string) => {
+    setSelectedSucursal(sucursal);
+  };
 
   return (
     <Form
@@ -122,38 +116,16 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
         <h2 className="text-xl font-bold text-white">
           Información de contacto
         </h2>
-        <FormItem name="address">
-          <Input
-            type="text"
-            label="Dirección"
-            placeholder="Carr. longitudinal del Nte. Km 73.5"
-            className="w-full p-2 rounded text-white"
-            required
-            variant="bordered"
-            radius="sm"
-          />
-        </FormItem>
-        <FormItem name="city">
-          <Input
-            type="text"
-            label="Ciudad"
-            placeholder="San Salvador"
-            className="w-full p-2 rounded text-white"
-            required
-            variant="bordered"
-            radius="sm"
-          />
-        </FormItem>
+
         <div className="flex space-x-4">
-          <FormItem name="postal" className="w-1/2">
+          <FormItem<FormValues> name="reservationDate">
             <Input
-              type="text"
-              label="Código postal"
-              placeholder="06007"
-              className="w-full p-2 rounded text-white"
+              type="date"
+              label="Fecha de retiro"
+              className="w-full p-2 rounded"
+              radius="sm"
               required
               variant="bordered"
-              radius="sm"
             />
           </FormItem>
           <FormItem name="phone" className="w-1/2">
@@ -169,6 +141,9 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
           </FormItem>
         </div>
       </div>
+
+      <DropDown onSelectSucursal={handleSelectSucursal} />
+
       {children}
     </Form>
   );

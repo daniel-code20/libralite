@@ -5,8 +5,16 @@ import 'swiper/css/free-mode';
 import { FreeMode, Pagination } from 'swiper/modules';
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { Card, CardBody, CircularProgress, Image } from '@nextui-org/react';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CircularProgress,
+  Image,
+} from '@nextui-org/react';
 import { Link } from 'react-router-dom';
+import React from 'react';
+import estrella from '../assets/estrella (1).png';
 
 interface Book {
   id: string;
@@ -14,6 +22,12 @@ interface Book {
   author: { name: string };
   image: { id: string; url: string };
   price: number;
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  book: { title: string; id: string };
 }
 
 const GET_ALL_BOOKS = gql`
@@ -33,34 +47,55 @@ const GET_ALL_BOOKS = gql`
   }
 `;
 
+const GET_ALL_REVIEWS = gql`
+  query GetAllReviews {
+    reviews {
+      rating
+      book {
+        id
+      }
+    }
+  }
+`;
+
 export const ActiveSlider = () => {
-  const { loading, error, data } = useQuery(GET_ALL_BOOKS);
+  const { loading: booksLoading, error: booksError, data: booksData } = useQuery(GET_ALL_BOOKS);
+  const { loading: reviewsLoading, error: reviewsError, data: reviewsData } = useQuery(GET_ALL_REVIEWS);
   const [searchTerm] = useState('');
 
-  if (loading) return <CircularProgress label="Loading..." />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (booksLoading || reviewsLoading) return <CircularProgress label="Loading..." />;
+  if (booksError) return <p>Error: {booksError.message}</p>;
+  if (reviewsError) return <p>Error: {reviewsError.message}</p>;
 
-  const filteredBooks = data.books.filter((book: Book) =>
+  const filteredBooks = booksData.books.filter((book: Book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getRatingForBook = (bookId: string) => {
+    const review = reviewsData.reviews.find((review: Review) => review.book.id === bookId);
+    return review ? review.rating : null;
+  };
+
   return (
-    <div className="flex items-start justify-center h-screen">
-      <div
-        style={{ padding: '40px', width: 'calc(100% - 80px)', height: '100px' }}
-      >
-        <div
-          className="circlePosition w-[590px] h-[200px] bg-gradient-to-r from-pink-500 to-violet-600 rounded-[100%] absolute z-1 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] blur-[90px]"
-          style={{ opacity: 0.5 }}
-        />
-        <h2 style={{ color: 'white', marginBottom: '20px' }}>Recomendados</h2>
+    <div className="flex items-start justify-center mb-24 animate__animated animate__fadeIn">
+      <div style={{ padding: '16px', width: 'calc(100% - 80px)', height: '100px' }}>
+        <h2 className="text-2xl font-bold mb-6 text-white">Recomendados</h2>
         <Swiper
           breakpoints={{
-            340: {
+            0: {
+              slidesPerView: 1,
+              spaceBetween: 15,
+            },
+            40: {
+              slidesPerView: 2,
+              spaceBetween: 15,
+            },
+            768: {
               slidesPerView: 3,
               spaceBetween: 15,
             },
-            800: {
-              slidesPerView: 4,
+            1024: {
+              slidesPerView: 5,
               spaceBetween: 15,
             },
           }}
@@ -76,36 +111,34 @@ export const ActiveSlider = () => {
           {filteredBooks.map((book: Book) => (
             <SwiperSlide key={book.id}>
               <Link to={`/book/${book.id}`}>
-                <Card className="bg-white/30" style={{ marginBottom: '40px' }}>
-                  <CardBody style={{ flexDirection: 'row' }}>
+                <Card className="bg-zinc-800 shadow-xl mb-10 flex-row" radius="sm">
+                  <CardBody>
                     <Image
-                      isBlurred
+                      className="w-full object-cover h-[140px]"
+                      radius="md"
                       alt={book.title}
-                      className="mr-4"
                       src={book.image.url}
-                      style={{ width: '150px', height: '200px' }}
                     />
-                    <div>
-                      <h4
-                        className="font-bold text-large"
-                        style={{ color: 'white' }}
-                      >
-                        {book.title}
-                      </h4>
-                      <p
-                        className="text-tiny uppercase font-bold"
-                        style={{ color: 'white' }}
-                      >
-                        {book.author.name}
-                      </p>
-                      <small
-                        className="text-default-500"
-                        style={{ color: 'white' }}
-                      >
+                  </CardBody>
+                  <CardFooter className="text-small flex flex-col items-start ml-0">
+                    <h4 className="font-bold text-base text-white line-clamp-2 mb-2">
+                      {book.title}
+                    </h4>
+                    <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
+                      {book.author.name}
+                    </h4>
+                    <div className="flex items-center space-x-6">
+                      <small className="text-sm font-bold text-sky-400/100">
                         ${book.price}
                       </small>
+                      <div className="flex items-center space-x-1">
+                        <img alt="star" src={estrella} style={{ width: '12px', height: '12px' }} />
+                        <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
+                          {getRatingForBook(book.id)} / 5
+                        </span>
+                      </div>
                     </div>
-                  </CardBody>
+                  </CardFooter>
                 </Card>
               </Link>
             </SwiperSlide>

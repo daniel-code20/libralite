@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { Button } from '@nextui-org/react';
-// import { PaymentForm } from '../forms/PaymentForm';
+import React from 'react';
+import { PaymentForm } from '../forms/PaymentForm';
+import { Button } from '@nextui-org/button';
+import Logo from '../components/Logo';
 
 const GET_BOOK_DETAILS = gql`
   query Books($id: ID!) {
@@ -48,24 +50,35 @@ export const BuyPage = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   const book = data.books[0];
-  
+
+  const handleSubmit = () => {
+    console.log('Submit desde BuyPage');
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-white">
-      <h1 className="text-3xl font-bold mb-2">Buy Page</h1>
-      <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-      <img
-        src={book.image.url}
-        alt={book.title}
-        className="w-64 h-64 object-cover"
-      />
-      <h2 className="text-xl mb-2">by {book.author.name}</h2>
-      <p className="text-lg mb-4 text-white">${book.price}</p>
-      <p className="text-lg mb-4 text-white">Cantidad: {book.quantity}</p>
-      <p className="text-lg mb-4 text-white">Unidades a comprar: {selectedQuantity}</p>
-      <p className="text-lg mb-4 text-white">Total: ${total.toFixed(2)}</p>
-      <Button color='primary'>Comprar</Button>
-      {/* <PaymentForm/> */}
-    </div>
+    <>
+      <Logo />
+      <div className="min-h-screen flex flex-col items-center justify-center text-white ">
+        <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
+        <PaymentForm onSubmit={handleSubmit}>
+          <div className="flex items-start space-x-1">
+            <p className="text-lg mb-2 font-bold text-gray-300">
+              Total de unidades:
+            </p>
+            <p className="text-lg mb-2 font-semibold text-gray-400">
+              {selectedQuantity}
+            </p>
+          </div>
+          <Button
+            type="submit"
+            radius="sm"
+            className="w-full  bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
+            style={{ height: '50px' }}
+          >
+            Pagar ${total.toFixed(2)}
+          </Button>
+        </PaymentForm>
+      </div>
+    </>
   );
 };

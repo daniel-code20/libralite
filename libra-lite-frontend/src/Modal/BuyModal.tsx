@@ -10,6 +10,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
+import React from 'react';
 
 type FormValues = {
   postal: string;
@@ -48,9 +49,9 @@ const BuyModal: React.FC<BuyModalProps> = ({ book }) => {
       <Button
         color="primary"
         variant="shadow"
-        radius="full"
+        radius="sm"
         onPress={onOpen}
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: '20px', marginRight:'20px' }}
       >
         Comprar
       </Button>
@@ -110,12 +111,12 @@ const BuyModal: React.FC<BuyModalProps> = ({ book }) => {
                 </Form>
               </ModalBody>
               <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button color="danger" variant="light" onPress={onClose} radius='sm'>
                     Cancelar
                   </Button>
                 <Button
                   color="primary"
-                  radius="md"
+                  radius="sm"
                   variant="shadow"
                   onPress={onClose}
                 >

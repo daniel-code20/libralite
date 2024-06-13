@@ -1,13 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-
-interface Book {
-  id: string;
-  title: string;
-  author: { name: string };
-  image: { url: string };
-  price: number;
-}
+import React from 'react';
+import { Button } from '@nextui-org/button';
+import Logo from '../components/Logo';
+import { ReservationForm } from '../forms/ReservationForm';
 
 const GET_BOOK_DETAILS = gql`
   query Books($id: ID!) {
@@ -21,30 +18,67 @@ const GET_BOOK_DETAILS = gql`
         url
       }
       price
+      quantity
     }
   }
 `;
+
 export const ReservationPage = () => {
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [total, setTotal] = useState(0);
   const { id } = useParams<{ id: string }>();
   const { loading, error, data } = useQuery(GET_BOOK_DETAILS, {
     variables: { id },
   });
 
+  useEffect(() => {
+    const selectedBook = localStorage.getItem('selectedBook');
+    if (selectedBook) {
+      const parsedSelectedBook = JSON.parse(selectedBook);
+      setSelectedQuantity(parsedSelectedBook.quantity);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data && data.books.length > 0) {
+      const totalPrice = data.books[0].price * selectedQuantity;
+      setTotal(totalPrice);
+    }
+  }, [selectedQuantity, data]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const book: Book = data.books[0];
+  const book = data.books[0];
+
+  const handleSubmit = () => {
+    console.log('Submit desde BuyPage');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-white">
-      <h1 className="text-3xl font-bold mb-2">Reservation Page</h1>
-      <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-      <img
-        src={book.image.url}
-        alt={book.title}
-        className="w-64 h-64 object-cover"
-      />
-      <h2 className="text-xl mb-2">by {book.author.name}</h2>
-      <p className="text-lg mb-4">${book.price}</p>
-    </div>
+    <>
+      <Logo />
+      <div className="min-h-screen flex flex-col items-center justify-center text-white ">
+        <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
+        <ReservationForm onSubmit={handleSubmit}>
+          <div className="flex items-start space-x-1">
+            <p className="text-lg mb-2 font-bold text-gray-300">
+              Total de unidades:
+            </p>
+            <p className="text-lg mb-2 font-semibold text-gray-400">
+              {selectedQuantity}
+            </p>
+          </div>
+          <Button
+            type="submit"
+            radius="sm"
+            className="w-full  bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
+            style={{ height: '50px' }}
+          >
+            Reservar ${total.toFixed(2)}
+          </Button>
+        </ReservationForm>
+      </div>
+    </>
   );
 };

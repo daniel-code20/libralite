@@ -1,10 +1,12 @@
-import { Card, CardBody, CardFooter } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Divider, Image } from '@nextui-org/react';
 import { useQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
+import React from 'react';
 
 interface Category {
   id: string;
   name: string;
+  image: { id: string; url: string };
 }
 
 const GET_ALL_BOOKS = gql`
@@ -12,6 +14,10 @@ const GET_ALL_BOOKS = gql`
     categories {
       id
       name
+      image {
+        id
+        url
+      }
     }
   }
 `;
@@ -24,31 +30,43 @@ export const CategoryCard = () => {
 
   return (
     <>
-      <h1 style={{ color: 'white' }}>Categorías</h1>
-      <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
-        {data.categories.map((item: Category) => (
-          <Link to={`/category/${item.id}`} key={item.id}>
-            <Card
-              shadow="sm"
-              isPressable
-              onPress={() => console.log('item pressed')}
-            >
-              <CardBody className="overflow-visible p-0">
-                {/* <Image
-                  shadow="sm"
-                  radius="lg"
-                  width="100%"
-                  alt={item.title}
-                  className="w-full object-cover h-[140px]"
-                  src={item.image.url}
-                /> */}
-              </CardBody>
-              <CardFooter className="text-small justify-between">
-                <b>{item.name ? item.name : 'No Category'}</b>
-              </CardFooter>
-            </Card>
-          </Link>
-        ))}
+      <div className="flex items-center justify-center h-screen animate__animated animate__fadeIn">
+      <div
+        style={{ padding: '16px', width: 'calc(100% - 80px)', height: '500px'}}
+      >
+
+      <h1 className="text-2xl font-bold mb-6 text-white">Categorías</h1>
+        <div className="gap-2 grid grid-cols-2 sm:grid-cols-3">
+          {data.categories.map((item: Category) => (
+            <Link to={`/category/${item.id}`} key={item.id}>
+              <Card className="max-w-[400px] bg-zinc-800 shadow-xl mb-6">
+                <CardHeader className="flex gap-3">
+                  <Image
+                    alt="nextui logo"
+                    height={40}
+                    radius="sm"
+                    src={item.image.url ? item.image.url : 'No image'}
+                    width={40}
+                  />
+                  <div className="flex flex-col">
+                    <p className="font-bold text-lg text-white line-clamp-2">
+                      {item.name ? item.name : 'No Category'}
+                    </p>
+                  </div>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                  <p className="text-lg text-white">
+                    Make beautiful websites regardless of your design
+                    experience.
+                  </p>
+                </CardBody>
+                <Divider />
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
       </div>
     </>
   );

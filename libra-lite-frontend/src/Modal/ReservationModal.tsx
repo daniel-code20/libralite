@@ -10,6 +10,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
+import React from 'react';
 
 type FormValues = {
   sucursal: string;
@@ -40,9 +41,9 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ book }) => {
       <Button
         color="primary"
         variant="ghost"
-        radius="full"
+        radius="sm"
         onClick={onOpen}
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: '20px', marginRight:'20px' }}
       >
         Reservar
       </Button>
@@ -79,12 +80,12 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ book }) => {
                 </Form>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onPress={onClose} radius='sm'>
                   Cancelar
                 </Button>
                 <Button
                   color="primary"
-                  radius="md"
+                  radius="sm"
                   variant="shadow"
                   onClick={onClose}
                 >
