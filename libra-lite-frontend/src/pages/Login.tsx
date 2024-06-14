@@ -11,6 +11,7 @@ import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { Button } from '@nextui-org/button';
 import '../styles/Login.css';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 export const Login = () => {
   type FormValues = {
@@ -51,6 +52,8 @@ export const Login = () => {
   const [isVisible, setIsVisible] = React.useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+
 
   return (
     <>
@@ -117,21 +120,7 @@ export const Login = () => {
               Iniciar sesión
             </Button>
             {error && <p>{error}</p>}
-            <Button
-              radius="sm"
-              className="max-w-lg btn-google"
-              variant="bordered"
-              type="submit"
-              style={{ height: '50px' }}
-            >
-              <img
-                width="24"
-                height="24"
-                src="https://img.icons8.com/color/48/google-logo.png"
-                alt="google-logo"
-              />
-              Iniciar sesión con Google
-            </Button>
+            <GoogleLoginButton />
           </Form>
           <p className="p-crear-cuenta">
             <span className="span-create-account">¿No tienes una cuenta?</span>

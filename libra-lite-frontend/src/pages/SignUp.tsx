@@ -10,6 +10,7 @@ import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { Button } from '@nextui-org/button';
 import logoImg from '../assets/Logo1.png';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import '../styles/signUp.css';
 
 export const SignUp = () => {
@@ -155,21 +156,7 @@ export const SignUp = () => {
               Crear Cuenta
             </Button>
             {error && <p>{error}</p>}
-            <Button
-              radius="sm"
-              className="max-w-lg btn-google"
-              variant="bordered"
-              type="submit"
-              style={{ height: '50px' }}
-            >
-              <img
-                width="24"
-                height="24"
-                src="https://img.icons8.com/color/48/google-logo.png"
-                alt="google-logo"
-              />
-              Crear cuenta con Google
-            </Button>
+            <GoogleLoginButton />
           </Form>
         </div>
         <p className="p-iniciar-sesion">
