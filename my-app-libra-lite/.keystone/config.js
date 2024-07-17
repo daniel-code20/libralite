@@ -45,10 +45,9 @@ var BookConfigList = {
   fields: {
     title: (0, import_fields.text)({ validation: { isRequired: true } }),
     description: (0, import_fields.text)({ validation: { isRequired: true } }),
-    gender: (0, import_fields.text)({ validation: { isRequired: true } }),
     edition: (0, import_fields.integer)({ validation: { isRequired: true }, defaultValue: 1 }),
     author: (0, import_fields.relationship)({ ref: "Author.books", many: false }),
-    category: (0, import_fields.relationship)({ ref: "Category.books", many: false }),
+    gender: (0, import_fields.relationship)({ ref: "Gender.books", many: false }),
     quantity: (0, import_fields.integer)({ defaultValue: 0 }),
     price: (0, import_fields.integer)({ defaultValue: 0 }),
     image: (0, import_fields.image)({ storage: "my_local_images" }),
@@ -199,13 +198,13 @@ var AuthorConfigList = {
   access: import_access6.allowAll
 };
 
-// lists/CategoryConfigList.ts
+// lists/GenderConfigList.ts
 var import_fields7 = require("@keystone-6/core/fields");
 var import_access7 = require("@keystone-6/core/access");
-var CategoryConfigList = {
+var GenderConfigList = {
   fields: {
     name: (0, import_fields7.text)(),
-    books: (0, import_fields7.relationship)({ ref: "Book.category", many: true }),
+    books: (0, import_fields7.relationship)({ ref: "Book.gender", many: true }),
     image: (0, import_fields7.image)({ storage: "my_local_images" })
   },
   access: import_access7.allowAll
@@ -243,7 +242,7 @@ var lists = {
   User: (0, import_core.list)(UserConfigList),
   Author: (0, import_core.list)(AuthorConfigList),
   Buy: (0, import_core.list)(BuyConfigList),
-  Category: (0, import_core.list)(CategoryConfigList),
+  Gender: (0, import_core.list)(GenderConfigList),
   Publisher: (0, import_core.list)(PublisherConfigList),
   Reservation: (0, import_core.list)(ReservationConfigList),
   Review: (0, import_core.list)(ReviewConfigList),

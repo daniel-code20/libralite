@@ -5,10 +5,9 @@ type Book {
   id: ID!
   title: String
   description: String
-  gender: String
   edition: Int
   author: Author
-  category: Category
+  gender: Gender
   quantity: Int
   price: Int
   image: ImageFieldOutput
@@ -46,10 +45,9 @@ input BookWhereInput {
   id: IDFilter
   title: StringFilter
   description: StringFilter
-  gender: StringFilter
   edition: IntFilter
   author: AuthorWhereInput
-  category: CategoryWhereInput
+  gender: GenderWhereInput
   quantity: IntNullableFilter
   price: IntNullableFilter
   compras: BuyManyRelationFilter
@@ -134,7 +132,6 @@ input BookOrderByInput {
   id: OrderDirection
   title: OrderDirection
   description: OrderDirection
-  gender: OrderDirection
   edition: OrderDirection
   quantity: OrderDirection
   price: OrderDirection
@@ -148,10 +145,9 @@ enum OrderDirection {
 input BookUpdateInput {
   title: String
   description: String
-  gender: String
   edition: Int
   author: AuthorRelateToOneForUpdateInput
-  category: CategoryRelateToOneForUpdateInput
+  gender: GenderRelateToOneForUpdateInput
   quantity: Int
   price: Int
   image: ImageFieldInput
@@ -166,9 +162,9 @@ input AuthorRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
-input CategoryRelateToOneForUpdateInput {
-  create: CategoryCreateInput
-  connect: CategoryWhereUniqueInput
+input GenderRelateToOneForUpdateInput {
+  create: GenderCreateInput
+  connect: GenderWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -207,10 +203,9 @@ input BookUpdateArgs {
 input BookCreateInput {
   title: String
   description: String
-  gender: String
   edition: Int
   author: AuthorRelateToOneForCreateInput
-  category: CategoryRelateToOneForCreateInput
+  gender: GenderRelateToOneForCreateInput
   quantity: Int
   price: Int
   image: ImageFieldInput
@@ -224,9 +219,9 @@ input AuthorRelateToOneForCreateInput {
   connect: AuthorWhereUniqueInput
 }
 
-input CategoryRelateToOneForCreateInput {
-  create: CategoryCreateInput
-  connect: CategoryWhereUniqueInput
+input GenderRelateToOneForCreateInput {
+  create: GenderCreateInput
+  connect: GenderWhereUniqueInput
 }
 
 input BuyRelateToManyForCreateInput {
@@ -508,7 +503,7 @@ input BookRelateToOneForCreateInput {
   connect: BookWhereUniqueInput
 }
 
-type Category {
+type Gender {
   id: ID!
   name: String
   books(where: BookWhereInput! = {}, orderBy: [BookOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BookWhereUniqueInput): [Book!]
@@ -516,36 +511,36 @@ type Category {
   image: ImageFieldOutput
 }
 
-input CategoryWhereUniqueInput {
+input GenderWhereUniqueInput {
   id: ID
 }
 
-input CategoryWhereInput {
-  AND: [CategoryWhereInput!]
-  OR: [CategoryWhereInput!]
-  NOT: [CategoryWhereInput!]
+input GenderWhereInput {
+  AND: [GenderWhereInput!]
+  OR: [GenderWhereInput!]
+  NOT: [GenderWhereInput!]
   id: IDFilter
   name: StringFilter
   books: BookManyRelationFilter
 }
 
-input CategoryOrderByInput {
+input GenderOrderByInput {
   id: OrderDirection
   name: OrderDirection
 }
 
-input CategoryUpdateInput {
+input GenderUpdateInput {
   name: String
   books: BookRelateToManyForUpdateInput
   image: ImageFieldInput
 }
 
-input CategoryUpdateArgs {
-  where: CategoryWhereUniqueInput!
-  data: CategoryUpdateInput!
+input GenderUpdateArgs {
+  where: GenderWhereUniqueInput!
+  data: GenderUpdateInput!
 }
 
-input CategoryCreateInput {
+input GenderCreateInput {
   name: String
   books: BookRelateToManyForCreateInput
   image: ImageFieldInput
@@ -792,12 +787,12 @@ type Mutation {
   updateBuys(data: [BuyUpdateArgs!]!): [Buy]
   deleteBuy(where: BuyWhereUniqueInput!): Buy
   deleteBuys(where: [BuyWhereUniqueInput!]!): [Buy]
-  createCategory(data: CategoryCreateInput!): Category
-  createCategories(data: [CategoryCreateInput!]!): [Category]
-  updateCategory(where: CategoryWhereUniqueInput!, data: CategoryUpdateInput!): Category
-  updateCategories(data: [CategoryUpdateArgs!]!): [Category]
-  deleteCategory(where: CategoryWhereUniqueInput!): Category
-  deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
+  createGender(data: GenderCreateInput!): Gender
+  createGenders(data: [GenderCreateInput!]!): [Gender]
+  updateGender(where: GenderWhereUniqueInput!, data: GenderUpdateInput!): Gender
+  updateGenders(data: [GenderUpdateArgs!]!): [Gender]
+  deleteGender(where: GenderWhereUniqueInput!): Gender
+  deleteGenders(where: [GenderWhereUniqueInput!]!): [Gender]
   createPublisher(data: PublisherCreateInput!): Publisher
   createPublishers(data: [PublisherCreateInput!]!): [Publisher]
   updatePublisher(where: PublisherWhereUniqueInput!, data: PublisherUpdateInput!): Publisher
@@ -857,9 +852,9 @@ type Query {
   buys(where: BuyWhereInput! = {}, orderBy: [BuyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: BuyWhereUniqueInput): [Buy!]
   buy(where: BuyWhereUniqueInput!): Buy
   buysCount(where: BuyWhereInput! = {}): Int
-  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CategoryWhereUniqueInput): [Category!]
-  category(where: CategoryWhereUniqueInput!): Category
-  categoriesCount(where: CategoryWhereInput! = {}): Int
+  genders(where: GenderWhereInput! = {}, orderBy: [GenderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GenderWhereUniqueInput): [Gender!]
+  gender(where: GenderWhereUniqueInput!): Gender
+  gendersCount(where: GenderWhereInput! = {}): Int
   publishers(where: PublisherWhereInput! = {}, orderBy: [PublisherOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PublisherWhereUniqueInput): [Publisher!]
   publisher(where: PublisherWhereUniqueInput!): Publisher
   publishersCount(where: PublisherWhereInput! = {}): Int

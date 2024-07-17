@@ -19,7 +19,9 @@ const GET_BOOK_DETAILS = gql`
       price
       quantity
       description
-      gender
+      gender {
+        name
+      }
     }
   }
 `;
@@ -163,7 +165,7 @@ export const AdminBookDetail = () => {
               <Button
                 color="danger"
                 radius="sm"
-                variant="ghost"
+                variant="flat"
                 className="ml-4"
               >
                 Eliminar

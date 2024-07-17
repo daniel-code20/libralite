@@ -6,10 +6,9 @@ export const BookConfigList: ListConfig<any> = {
   fields: {
     title: text({ validation: { isRequired: true } }),
     description: text({ validation: { isRequired: true } }),
-    gender: text({ validation: { isRequired: true } }),
     edition: integer({ validation: { isRequired: true }, defaultValue: 1 }),
     author: relationship({ ref: "Author.books", many: false }),
-    category: relationship({ ref: "Category.books", many: false }),
+    gender: relationship({ ref: "Gender.books", many: false }),
     quantity: integer({ defaultValue: 0 }),
     price: integer({ defaultValue: 0 }),
     image: image({ storage: 'my_local_images' }),

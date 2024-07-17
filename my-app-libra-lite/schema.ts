@@ -5,7 +5,7 @@ import {
   UserConfigList,
   AuthorConfigList,
   BuyConfigList,
-  CategoryConfigList,
+  GenderConfigList,
   PublisherConfigList,
   ReservationConfigList,
   ReviewConfigList,
@@ -21,7 +21,7 @@ export const lists: Lists = {
 
   Buy: list(BuyConfigList),
 
-  Category: list(CategoryConfigList),
+  Gender: list(GenderConfigList),
 
   Publisher: list(PublisherConfigList),
 

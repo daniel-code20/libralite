@@ -11,10 +11,11 @@ import {
 import { useState, useRef } from 'react';
 import React from 'react';
 import { gql, useApolloClient } from '@apollo/client';
+import Swal from 'sweetalert2';
 
-const CREATE_CATEGORY_MUTATION = gql`
-  mutation CreateCategory($data: CategoryCreateInput!) {
-    createCategory(data: $data) {
+const CREATE_GENDER_MUTATION = gql`
+  mutation CreateGender($data: GenderCreateInput!) {
+    createGender(data: $data) {
       id
       name
       image {
@@ -50,11 +51,11 @@ const AdminCategoryModal = () => {
 
     try {
       const { data } = await client.mutate({
-        mutation: CREATE_CATEGORY_MUTATION,
+        mutation: CREATE_GENDER_MUTATION,
         context: {
           headers: {
             'content-type': 'multipart/form-data',
-            'x-apollo-operation-name': 'CreateCategoryMutation',
+            'x-apollo-operation-name': 'CreateGenderMutation',
             'apollo-require-preflight': true,
           },
         },
@@ -66,36 +67,46 @@ const AdminCategoryModal = () => {
         },
       });
 
-   
 
-      console.log('Respuesta de la mutación:', data);
-      alert('Categoría creada exitosamente');
+
+      Swal.fire({
+        title: '¡Excelente!',
+        text: 'Género creado exitosamente',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
       setCategoryName('');
       setSelectedImages(null);
       formRef.current?.reset();
     } catch (error) {
-      console.error('Error al realizar la mutación:', error);
-      alert('Error al crear la categoría');
+      console.error('Error al crear el género:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al crear el género',
+        icon: 'error',
+      });
     }
   };
 
   return (
     <>
       <Button
-        color="primary"
-        variant="shadow"
-        radius="sm"
+        color="success" radius="sm" variant="shadow"
         onClick={onOpen}
         style={{ marginBottom: '20px' }}
       >
-        Crear Categoría
+        Añadir Género
       </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Crear Categoria</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Añadir Género</ModalHeader>
               <ModalBody>
                 <form onSubmit={handleSubmit} ref={formRef}>
                   <div>
@@ -118,16 +129,16 @@ const AdminCategoryModal = () => {
                     />
                   </div>
 
-                  <Button type="submit" color="primary" radius="md" variant="shadow">
-                    Crear
+                  <Button type="submit" color="primary" radius="sm" variant="shadow" className='mr-4 mt-4 mb-4'>
+                    Añadir
                   </Button>
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onClick={onClose}>
+                <Button color="danger" variant="flat" radius="sm" onClick={onClose}>
                   Cancelar
                 </Button>
-              </ModalFooter>
+                </form>
+              </ModalBody>
+       
+            
             </>
           )}
         </ModalContent>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Footer } from '../../components';
 import { AdminActiveSlider } from '../components/AdminActiveSlider';
-import { AdminCategoryCard } from '../components/AdminCategoryCard';
+import { AdminGenderCard } from '../components/AdminGenderCard';
 import AdminLogo from '../components/AdminLogo';
 import { AdminSearchBar } from '../components/AdminSearchBar';
 
@@ -11,7 +11,7 @@ export const AdminPrincipalPage = () => {
       <AdminLogo />
       <AdminSearchBar />
       <AdminActiveSlider />
-      <AdminCategoryCard />
+      <AdminGenderCard />
       <Footer />
     </>
   );

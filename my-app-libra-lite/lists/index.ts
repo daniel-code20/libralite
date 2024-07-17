@@ -4,6 +4,6 @@ export * from './ReservationConfigList';
 export * from './BuyConfigList';
 export * from './ReviewConfigList';
 export * from './AuthorConfigList';
-export * from './CategoryConfigList';
+export * from './GenderConfigList';
 export * from './PublisherConfigList';
 export * from './SucursalConfigList';

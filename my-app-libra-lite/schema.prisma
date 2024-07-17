@@ -15,12 +15,11 @@ model Book {
   id               String        @id @default(cuid())
   title            String        @default("")
   description      String        @default("")
-  gender           String        @default("")
   edition          Int           @default(1)
   author           Author?       @relation("Book_author", fields: [authorId], references: [id])
   authorId         String?       @map("author")
-  category         Category?     @relation("Book_category", fields: [categoryId], references: [id])
-  categoryId       String?       @map("category")
+  gender           Gender?       @relation("Book_gender", fields: [genderId], references: [id])
+  genderId         String?       @map("gender")
   quantity         Int?          @default(0)
   price            Int?          @default(0)
   image_id         String?
@@ -35,7 +34,7 @@ model Book {
   from_Review_book Review[]      @relation("Review_book")
 
   @@index([authorId])
-  @@index([categoryId])
+  @@index([genderId])
   @@index([publisherId])
 }
 
@@ -76,10 +75,10 @@ model Buy {
   @@index([libroId])
 }
 
-model Category {
+model Gender {
   id              String  @id @default(cuid())
   name            String  @default("")
-  books           Book[]  @relation("Book_category")
+  books           Book[]  @relation("Book_gender")
   image_id        String?
   image_filesize  Int?
   image_width     Int?
