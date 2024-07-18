@@ -99,14 +99,14 @@ const AdminCategoryModal = () => {
         onClick={onOpen}
         style={{ marginBottom: '20px' }}
       >
-        Añadir Género
+        Agregar Género
       </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Añadir Género</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Agregar Género</ModalHeader>
               <ModalBody>
                 <form onSubmit={handleSubmit} ref={formRef}>
                   <div>
@@ -130,7 +130,7 @@ const AdminCategoryModal = () => {
                   </div>
 
                   <Button type="submit" color="primary" radius="sm" variant="shadow" className='mr-4 mt-4 mb-4'>
-                    Añadir
+                    Agregar
                   </Button>
                 <Button color="danger" variant="flat" radius="sm" onClick={onClose}>
                   Cancelar

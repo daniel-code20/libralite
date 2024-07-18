@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -9,6 +9,7 @@ import {
   Image,
 } from '@nextui-org/react';
 import estrella from '../../assets/estrella (1).png';
+import AdminBookModal from '../../Modal/AdminBookModal';
 
 interface Book {
   id: string;
@@ -16,6 +17,7 @@ interface Book {
   author: { name: string };
   image: { url: string };
   price: number;
+  gender: { id: string, name: string }
 }
 
 interface BookListProps {
@@ -23,20 +25,17 @@ interface BookListProps {
   getRatingForBook: (bookId: string) => number | null;
 }
 
+
 const AdminBookList: React.FC<BookListProps> = ({
   books,
   getRatingForBook,
 }) => {
+  
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen animate__animated animate__fadeIn">
         <div className="px-8 w-full max-w-[1200px]">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-white">Categorías</h1>
-            <Button color="success" radius="sm" variant="shadow">
-              Añadir Libro
-            </Button>
-          </div>
+          
           {books.length > 0 ? (
             <div className="gap-4 grid grid-cols-2 sm:grid-cols-4">
               {books.map((book, index) => (
@@ -59,7 +58,7 @@ const AdminBookList: React.FC<BookListProps> = ({
                           {book.title}
                         </h4>
                         <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
-                          {book.author.name}
+                        {book.author?.name || 'Autor desconocido'}
                         </h4>
                         <div className="flex items-center space-x-6">
                           <small className="text-sm font-bold text-sky-400/100">
@@ -92,7 +91,9 @@ const AdminBookList: React.FC<BookListProps> = ({
               ))}
             </div>
           ) : (
-            <p>No hay libros disponibles en esta categoría.</p>
+            <p className="text-center text-lg text-gray-400 mt-8">
+              No hay libros para mostrar.
+            </p>
           )}
         </div>
       </div>

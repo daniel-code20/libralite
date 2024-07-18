@@ -6,6 +6,7 @@ import AdminBookList from '../components/AdminBookList';
 
 import { AdminSearchBar } from '../components/AdminSearchBar';
 import AdminLogo from '../components/AdminLogo';
+import AdminBookModal from '../../Modal/AdminBookModal';
 
 interface Genders {
   id: string;
@@ -17,6 +18,7 @@ interface Genders {
     image: { url: string };
     author: { name: string };
     price: number;
+    gender: {id: string, name: string};
   }[];
 }
 
@@ -83,13 +85,19 @@ export const AdminCategoryDetail = () => {
     return review ? review.rating : null;
   };
 
+  console.log(gender.id)
+
   return (
     <>
       <AdminLogo />
       <AdminSearchBar />
       <div className="h-screen bg-rgb-25-25-25 flex flex-col items-center justify-start text-white py-6 overflow-y-auto">
         <h1 className="text-3xl font-bold mb-4">{gender.name}</h1>
+        <div className="flex justify-between items-center mb-6">
+          <AdminBookModal selectedGenre={gender.id} />
+        </div>
         <AdminBookList books={gender.books} getRatingForBook={getRatingForBook} />
+        
       </div>
     </>
   );

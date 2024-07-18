@@ -61,7 +61,7 @@ export const AdminBookDetail = () => {
         title: booksData.books[0].title,
         price: booksData.books[0].price,
         description: booksData.books[0].description,
-        gender: booksData.books[0].gender,
+        gender: booksData.books[0].gender.name,
         quantity,
       };
       localStorage.setItem('selectedBook', JSON.stringify(selectedBook));
@@ -122,7 +122,7 @@ export const AdminBookDetail = () => {
               </div>
 
               <h2 className="text-l mb-2 font-regular text-gray-300">
-                by {book.author.name}
+                by {book.author?.name || 'Autor desconocido'}
               </h2>
 
               <div className="max-w-md">
@@ -137,7 +137,7 @@ export const AdminBookDetail = () => {
                   Género:
                 </p>
                 <p className="text-md mb-4 font-regular text-gray-400">
-                  {book.gender}
+                  {book.gender.name}
                 </p>
               </div>
 
