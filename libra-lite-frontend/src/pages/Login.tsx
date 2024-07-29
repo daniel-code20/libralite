@@ -12,6 +12,7 @@ import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { Button } from '@nextui-org/button';
 import '../styles/Login.css';
 import GoogleLoginButton from '../components/GoogleLoginButton';
+import { useUser } from '../provider/userProvider';
 
 export const Login = () => {
   type FormValues = {
@@ -32,17 +33,19 @@ export const Login = () => {
       },
     },
   };
-
+  
+  const { setUserId } = useUser();
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (data: { email: string; password: string }) => {
     try {
       const user = await authenticateUser(data.email, data.password);
+      localStorage.setItem('userId', user.id);
       if (user.role === UserRoles.ADMIN) {
         navigate('/admin-principal');
       } else {
-        navigate('/admin-principal');
+        navigate('/principal');
       }
     } catch (error) {
       setError('Correo o contraseña inválidos');

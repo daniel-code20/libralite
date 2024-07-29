@@ -78,12 +78,7 @@ const EditGenderButton: React.FC<{ gender: Gender }> = ({ gender }) => {
         text: 'Género actualizado exitosamente',
         icon: 'success',
         confirmButtonText: 'Ok',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          onClose();
-          window.location.reload();
-        }
-      });
+      })
 
       setCategoryName('');
       setSelectedImages(null);

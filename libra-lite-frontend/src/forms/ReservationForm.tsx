@@ -3,19 +3,21 @@ import { Input } from '@nextui-org/react';
 import React, { useState } from 'react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
 import Swal from 'sweetalert2';
+import { formatISO } from 'date-fns';
 
 interface PaymentFormProps {
   children?: React.ReactNode;
-  onSubmit: () => void;
+  onSubmit: (formData: FormValues) => void;
 }
 
-type FormValues = {
+export type FormValues = {
   cardNumber: string;
   cardName: string;
   expiryDate: string;
   cvv: string;
-  sucursal: string;
+  phone: string;
   reservationDate: string;
+  sucursal: string;
 };
 
 const validations: FormValidations<FormValues> = {
@@ -36,11 +38,14 @@ const validations: FormValidations<FormValues> = {
       }
     },
   },
-  sucursal: {
-    required: 'La sucursal es requerida',
+  phone: {
+    required: 'El teléfono es requerido',
   },
   reservationDate: {
     required: 'La fecha limite para retirar el libro es requerida',
+  },
+  sucursal: {
+    required: 'La sucursal es requerida',
   },
 };
 
@@ -51,18 +56,17 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
   const [selectedSucursal, setSelectedSucursal] = useState<string>('');
 
   const handleSubmit = (data: FormValues) => {
+    const reservationDateISO = formatISO(new Date(data.reservationDate));
+    const formDataWithISODate = { ...data, reservationDate: reservationDateISO, sucursal: selectedSucursal };
+
     Swal.fire({
-      title: '¡Excelente!',
-      text: 'Reservación éxitosa',
-      icon: 'success',
-      confirmButtonText: 'Ok',
     }).then((result) => {
       if (result.isConfirmed) {
         window.location.href = '/principal';
       }
     });
-    console.log('Payment Information:', data);
-    onSubmit();
+    console.log('Payment Information:', formDataWithISODate);
+    onSubmit(formDataWithISODate);
   };
 
   const handleSelectSucursal = (sucursal: string) => {

@@ -5,7 +5,6 @@ import { Button, Image } from '@nextui-org/react';
 import estrella from '../assets/estrella (1).png';
 import Logo from '../components/Logo';
 
-
 const GET_BOOK_DETAILS = gql`
   query Books($id: ID!) {
     books(where: { id: { equals: $id } }) {
@@ -20,7 +19,10 @@ const GET_BOOK_DETAILS = gql`
       price
       quantity
       description
-      gender
+      gender {
+        id
+        name
+      }
     }
   }
 `;
@@ -46,6 +48,10 @@ export const BookDetail = () => {
     data: booksData,
   } = useQuery(GET_BOOK_DETAILS, {
     variables: { id },
+    onCompleted: () => {
+      // Reset quantity when data is fetched
+      setQuantity(1);
+    }
   });
   const {
     loading: reviewsLoading,
@@ -104,9 +110,11 @@ export const BookDetail = () => {
     }
   };
 
+  const isOutOfStock = book.quantity === 0;
+
   return (
     <>
-    <Logo/>
+      <Logo />
       <div className="min-h-screen flex items-center justify-center text-white animate__animated animate__fadeIn">
         {book && (
           <div className="flex flex-row items-start space-x-6">
@@ -133,7 +141,7 @@ export const BookDetail = () => {
               </div>
 
               <h2 className="text-l mb-2 font-regular text-gray-300">
-                by {book.author.name}
+                by {book.author?.name || 'Autor desconocido'}
               </h2>
 
               <div className="max-w-md">
@@ -148,7 +156,7 @@ export const BookDetail = () => {
                   Género:
                 </p>
                 <p className="text-md mb-4 font-regular text-gray-400">
-                  {book.gender}
+                  {book.gender.name}
                 </p>
               </div>
 
@@ -167,6 +175,7 @@ export const BookDetail = () => {
                   color="primary"
                   variant="light"
                   onClick={decrementQuantity}
+                  disabled={isOutOfStock}
                 >
                   -
                 </Button>
@@ -176,6 +185,7 @@ export const BookDetail = () => {
                   color="primary"
                   variant="light"
                   onClick={incrementQuantity}
+                  disabled={isOutOfStock}
                 >
                   +
                 </Button>
@@ -188,36 +198,38 @@ export const BookDetail = () => {
                   ${total.toFixed(2)}
                 </p>
               </div>
+              {isOutOfStock ? (
+                <p className="text-lg mb-4 font-semibold text-red-500">
+                  Agotado
+                </p>
+              ) : (
+                <div>
+                  <Button
+                    className="mr-4"
+                    color="primary"
+                    radius="sm"
+                    variant="shadow"
+                  >
+                    <Link
+                      to={`/buy/${book.id}`}
+                      key={`buy-${book.id}`}
+                      style={{ color: 'white', textDecoration: 'none' }}
+                    >
+                      Comprar
+                    </Link>
+                  </Button>
 
-              <Button
-                  color="primary"
-                  radius="sm"
-                  variant="ghost"
-       
-                >
-                  <Link
-                    to={`/reservation/${book.id}`}
-                    key={`reservation-${book.id}`}
-                    style={{ color: 'white', textDecoration: 'none' }}
-                  >
-                    Reservar
-                  </Link>
-                </Button>
-                <Button
-                className='ml-6'
-                  color="primary"
-                  radius="sm"
-                  variant="shadow"
-                 
-                >
-                  <Link
-                    to={`/buy/${book.id}`}
-                    key={`buy-${book.id}`}
-                    style={{ color: 'white', textDecoration: 'none' }}
-                  >
-                    Comprar
-                  </Link>
-                </Button>
+                  <Button color="primary" radius="sm" variant="flat">
+                    <Link
+                      to={`/reservation/${book.id}`}
+                      key={`reservation-${book.id}`}
+                      style={{ color: 'white', textDecoration: 'none' }}
+                    >
+                      Reservar
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}

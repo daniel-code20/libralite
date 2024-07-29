@@ -1,6 +1,6 @@
 import { ListConfig } from "@keystone-6/core";
 import { allowAll } from "@keystone-6/core/access";
-import { timestamp, relationship, select } from "@keystone-6/core/fields";
+import { timestamp, relationship, select, integer } from "@keystone-6/core/fields";
 
 export const ReservationConfigList: ListConfig<any> = {
   fields: {
@@ -19,6 +19,10 @@ export const ReservationConfigList: ListConfig<any> = {
     }),
     reservationDate: timestamp({ defaultValue: { kind: "now" } }),
     sucursal: relationship({ ref: "Sucursal", many: false }),
+    cantidad: integer({
+      defaultValue: 1,
+      validation: { isRequired: true, min: 1 },
+    }),
   },
   access: allowAll,
 };

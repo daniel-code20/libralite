@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 import { Button, Image } from '@nextui-org/react';
 import estrella from '../../assets/estrella (1).png';
 import AdminLogo from '../components/AdminLogo';
+import AdminEditBookModal from '../../Modal/AdminEditBookModal';
+import DeleteBookButton from '../../graphql/DeleteBookButton';
+import { Genders } from '../../graphql/types';
 
 const GET_BOOK_DETAILS = gql`
   query Books($id: ID!) {
@@ -20,8 +23,18 @@ const GET_BOOK_DETAILS = gql`
       quantity
       description
       gender {
+        id
         name
       }
+    }
+  }
+`;
+
+const GET_ALL_GENDERS = gql`
+  query GetAllGenders {
+    genders {
+      id
+      name
     }
   }
 `;
@@ -41,34 +54,30 @@ export const AdminBookDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const { id } = useParams<{ id: string }>();
-  const {
-    loading: booksLoading,
-    error: booksError,
-    data: booksData,
-  } = useQuery(GET_BOOK_DETAILS, {
+
+  const { loading: bookLoading, error: bookError, data: bookData } = useQuery(GET_BOOK_DETAILS, {
     variables: { id },
   });
-  const {
-    loading: reviewsLoading,
-    error: reviewsError,
-    data: reviewsData,
-  } = useQuery(GET_ALL_REVIEWS);
+
+  const { loading: genderLoading, error: genderError, data: genderData } = useQuery(GET_ALL_GENDERS);
+
+  const { loading: reviewsLoading, error: reviewsError, data: reviewsData } = useQuery(GET_ALL_REVIEWS);
 
   useEffect(() => {
-    if (booksData && booksData.books.length > 0) {
+    if (bookData?.books.length > 0) {
       const selectedBook = {
-        id: booksData.books[0].id,
-        title: booksData.books[0].title,
-        price: booksData.books[0].price,
-        description: booksData.books[0].description,
-        gender: booksData.books[0].gender.name,
+        id: bookData.books[0].id,
+        title: bookData.books[0].title,
+        price: bookData.books[0].price,
+        description: bookData.books[0].description,
+        gender: bookData.books[0].gender.name,
         quantity,
       };
       localStorage.setItem('selectedBook', JSON.stringify(selectedBook));
-      const totalPrice = booksData.books[0].price * quantity;
+      const totalPrice = bookData.books[0].price * quantity;
       setTotal(totalPrice);
     }
-  }, [quantity, booksData]);
+  }, [quantity, bookData]);
 
   useEffect(() => {
     const savedBook = localStorage.getItem('selectedBook');
@@ -79,18 +88,26 @@ export const AdminBookDetail = () => {
     }
   }, []);
 
-  if (booksLoading || reviewsLoading) return <p>Loading...</p>;
-  if (booksError) return <p>Error: {booksError.message}</p>;
+  if (bookLoading || genderLoading || reviewsLoading) return <p>Cargando...</p>;
+  if (bookError || genderError) return <p>Error: {bookError?.message || genderError?.message}</p>;
   if (reviewsError) return <p>Error: {reviewsError.message}</p>;
 
-  const book = booksData.books[0];
+  const book = bookData?.books[0];
+  const gender = genderData?.genders.find((g: { id: any; }) => g.id === book?.gender.id);
+
+  if (!book || !gender) return <p>No se encontraron datos del libro o del género.</p>;
 
   const getRatingForBook = () => {
-    const review = reviewsData.reviews.find(
+    const review = reviewsData?.reviews.find(
       (review: { rating: number; book: { id: string } }) =>
         review.book.id === book.id
     );
     return review ? review.rating : null;
+  };
+
+  const formatPrice = (price: number) => {
+    if (isNaN(price)) return '$0.00'; // Manejar valores no numéricos
+    return `$${price.toFixed(2)}`;
   };
 
   return (
@@ -120,14 +137,10 @@ export const AdminBookDetail = () => {
                   </span>
                 </div>
               </div>
-
               <h2 className="text-l mb-2 font-regular text-gray-300">
                 by {book.author?.name || 'Autor desconocido'}
               </h2>
-
               <div className="max-w-md">
-                {' '}
-                {/* Nuevo div para limitar el ancho */}
                 <p className="text-md mb-2 font-regular text-gray-500">
                   {book.description}
                 </p>
@@ -137,10 +150,9 @@ export const AdminBookDetail = () => {
                   Género:
                 </p>
                 <p className="text-md mb-4 font-regular text-gray-400">
-                  {book.gender.name}
+                  {gender.name}
                 </p>
               </div>
-
               <div className="flex items-start space-x-1">
                 <p className="text-lg mb-4 font-semibold text-gray-300">
                   Disponibles:
@@ -149,27 +161,16 @@ export const AdminBookDetail = () => {
                   {book.quantity} Unidades
                 </p>
               </div>
-
               <div className="flex items-start space-x-1">
                 <p className="text-lg mb-4 font-semibold text-gray-300">
                   Precio:
                 </p>
                 <p className="text-lg mb-4 font-regular text-gray-400">
-                  ${book.price.toFixed(2)}
+                  {formatPrice(book.price)}
                 </p>
               </div>
-
-              <Button color="primary" radius="sm" variant="shadow">
-                Editar
-              </Button>
-              <Button
-                color="danger"
-                radius="sm"
-                variant="flat"
-                className="ml-4"
-              >
-                Eliminar
-              </Button>
+              <AdminEditBookModal selectedGenre={gender.id} bookId={book.id} />
+              <DeleteBookButton BookId={book.id} />
             </div>
           </div>
         )}

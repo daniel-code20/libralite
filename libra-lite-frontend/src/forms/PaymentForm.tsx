@@ -3,14 +3,12 @@ import React from 'react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
 import Swal from 'sweetalert2';
 
-
 interface PaymentFormProps {
   children?: React.ReactNode;
-  onSubmit: () => void;
-
+  onSubmit: (formData: FormValues) => void;
 }
 
-type FormValues = {
+export type FormValues = {
   cardNumber: string;
   cardName: string;
   expiryDate: string;
@@ -57,7 +55,6 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
   children,
   onSubmit
 }) => {
- 
   const handleSubmit = (data: FormValues) => {
     Swal.fire({
       title: '¡Muchas Gracias!',
@@ -67,13 +64,11 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
     }).then((result) => {
       if (result.isConfirmed) {
         window.location.href = '/principal'; 
-        
       }
     });
     console.log('Payment Information:', data);
-    onSubmit();
+    onSubmit(data);  // Pasar datos del formulario a la función onSubmit
   };
-
 
   return (
     <Form

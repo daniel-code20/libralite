@@ -104,6 +104,7 @@ model Reservation {
   reservationDate DateTime? @default(now())
   sucursal        Sucursal? @relation("Reservation_sucursal", fields: [sucursalId], references: [id])
   sucursalId      String?   @map("sucursal")
+  cantidad        Int       @default(1)
 
   @@index([bookId])
   @@index([userId])

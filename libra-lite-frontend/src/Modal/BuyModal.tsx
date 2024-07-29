@@ -11,6 +11,27 @@ import {
 } from '@nextui-org/react';
 import Form, { FormItem, FormValidations } from 'reactivity-hook-form';
 import React from 'react';
+import { gql, useApolloClient } from '@apollo/client';
+import Swal from 'sweetalert2';
+
+// Define the mutation to create a purchase
+const CREATE_BUY_MUTATION = gql`
+  mutation Buy($data: BuyCreateInput!) {
+    createBuy(data: $data) {
+      id
+      codigoPostal
+      ciudad
+      telefono
+      direccionEnvio
+      libro {
+        id
+      }
+      cliente {
+        id
+      } 
+    }
+  }
+`;
 
 type FormValues = {
   postal: string;
@@ -36,13 +57,55 @@ const validations: FormValidations<FormValues> = {
 
 interface BuyModalProps {
   book: { id: string };
+  userId: string; // Assuming you pass the userId as a prop
 }
 
-const BuyModal: React.FC<BuyModalProps> = ({ book }) => {
-  const handleSubmit = (data: FormValues) => {
-    console.log('Reservation Information:', data);
-  };
+const BuyModal: React.FC<BuyModalProps> = ({ book, userId }) => {
+  const client = useApolloClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleSubmit = async (data: FormValues) => {
+    try {
+      const { data: purchaseData } = await client.mutate({
+        mutation: CREATE_BUY_MUTATION,
+        context: {
+          headers: {
+            'content-type': 'multipart/form-data',
+            'x-apollo-operation-name': 'CreateBuyMutation',
+            'apollo-require-preflight': true,
+          },
+        },
+        variables: {
+          data: {
+            postal: data.postal,
+            address: data.address,
+            phone: data.phone,
+            city: data.city,
+            book: { connect: { id: book.id } },
+            user: { connect: { id: userId } },
+          },
+        },
+      });
+
+      Swal.fire({
+        title: '¡Compra exitosa!',
+        text: 'La compra se ha registrado exitosamente',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
+    } catch (error) {
+      console.error('Error al crear la compra:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un error al registrar la compra',
+        icon: 'error',
+      });
+    }
+  };
 
   return (
     <>
@@ -51,7 +114,7 @@ const BuyModal: React.FC<BuyModalProps> = ({ book }) => {
         variant="shadow"
         radius="sm"
         onPress={onOpen}
-        style={{ marginBottom: '20px', marginRight:'20px' }}
+        style={{ marginBottom: '20px', marginRight: '20px' }}
       >
         Comprar
       </Button>
@@ -108,25 +171,20 @@ const BuyModal: React.FC<BuyModalProps> = ({ book }) => {
                       variant="bordered"
                     />
                   </FormItem>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    radius="sm"
+                    variant="shadow"
+                    style={{ marginTop: '20px' }}
+                  >
+                    Confirmar
+                  </Button>
                 </Form>
               </ModalBody>
               <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose} radius='sm'>
-                    Cancelar
-                  </Button>
-                <Button
-                  color="primary"
-                  radius="sm"
-                  variant="shadow"
-                  onPress={onClose}
-                >
-                  <Link
-                    to={`/buy/${book.id}`}
-                    key={`buy-${book.id}`}
-                    style={{ color: 'white', textDecoration: 'none' }}
-                  >
-                    Confirmar
-                  </Link>
+                <Button color="danger" variant="light" onPress={onClose} radius="sm">
+                  Cancelar
                 </Button>
               </ModalFooter>
             </>

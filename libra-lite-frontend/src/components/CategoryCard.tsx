@@ -1,17 +1,25 @@
-import { Card, CardBody, CardHeader, Divider, Image } from '@nextui-org/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Image,
+} from '@nextui-org/react';
 import { useQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 
-interface Category {
+interface Genders {
   id: string;
   name: string;
   image: { id: string; url: string };
 }
 
 const GET_ALL_BOOKS = gql`
-  query Categories {
-    categories {
+  query Genders {
+    genders {
       id
       name
       image {
@@ -25,6 +33,7 @@ const GET_ALL_BOOKS = gql`
 export const CategoryCard = () => {
   const { data, loading, error } = useQuery(GET_ALL_BOOKS);
 
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -32,11 +41,17 @@ export const CategoryCard = () => {
     <>
       <div className="flex flex-col items-center justify-center min-h-screen animate__animated animate__fadeIn">
         <div className="px-8 w-full max-w-[1200px]">
-          <h1 className="text-2xl font-bold mb-6 text-white">Categorías</h1>
-          <div className="gap-4 grid grid-cols-2 sm:grid-cols-3 ">
-            {data.categories.map((item: Category) => (
-              <Link to={`/category/${item.id}`} key={item.id}>
-                <Card className="max-w-[400px] bg-zinc-800 shadow-xl mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-white">Géneros</h1>
+
+          </div>
+          <div className="gap-4 grid grid-cols-2 sm:grid-cols-3">
+            {data.genders.map((item: Genders) => (
+              <Card
+                className="max-w-[400px] bg-zinc-800 shadow-xl mb-6"
+                key={item.id}
+              >
+                <Link to={`/category/${item.id}`}>
                   <CardHeader className="flex gap-3">
                     <Image
                       alt="category image"
@@ -58,9 +73,9 @@ export const CategoryCard = () => {
                       experience.
                     </p>
                   </CardBody>
-                  <Divider />
-                </Card>
-              </Link>
+                </Link>
+                <Divider />
+              </Card>
             ))}
           </div>
         </div>

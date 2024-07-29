@@ -27,7 +27,7 @@ export const AppRouter = () => {
         <Route path="/admin-book/:id" element={<AdminBookDetail />} />
         <Route path="/category/:id" element={<CategoryDetail />} />
         <Route path="/admin-category/:id" element={<AdminCategoryDetail />} />
-        <Route path="/buy/:id" element={<BuyPage />} />
+        <Route path="/buy/:id" element={<BuyPage userId={''} />} />
         <Route path="/reservation/:id" element={<ReservationPage />} />
       </Routes>
     </>

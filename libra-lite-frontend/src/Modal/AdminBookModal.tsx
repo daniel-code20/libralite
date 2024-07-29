@@ -3,11 +3,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   Input,
   useDisclosure,
-
 } from '@nextui-org/react';
 import { useState, useRef } from 'react';
 import React from 'react';
@@ -50,11 +48,13 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
     edition: '',
     author: '',
     quantity: '',
-    price: '',
-    gender: '',// Guardamos el ID del género seleccionado
+    price: '0.00', // Inicializa con un valor flotante válido
+    gender: '', // Guardamos el ID del género seleccionado
   });
   const client = useApolloClient();
   const formRef = useRef<HTMLFormElement>(null);
+
+  const formatPrice = (priceInCents: number) => (priceInCents / 100).toFixed(2);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -81,6 +81,9 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
 
     const file = selectedImage[0]; // Asumimos que solo se sube una imagen
 
+    // Convertir el precio a entero (por ejemplo, centavos)
+    const priceInCents = Math.round(parseFloat(bookData.price) * 100);
+
     try {
       const { data } = await client.mutate({
         mutation: CREATE_BOOK_MUTATION,
@@ -97,7 +100,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
             description: bookData.description,
             edition: parseInt(bookData.edition, 10),
             quantity: parseInt(bookData.quantity, 10),
-            price: parseFloat(bookData.price),
+            price: priceInCents, // Enviar el precio como entero en centavos
             gender: { connect: { id: selectedGenre } }, // ID como string
             image: { upload: file },
           },
@@ -121,7 +124,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
         edition: '',
         author: '',
         quantity: '',
-        price: '',
+        price: '0.00', // Reinicia el precio a un valor flotante válido
         gender: selectedGenre, // Limpiar el estado del libro después de crearlo
       });
       setSelectedImage(null);
@@ -162,7 +165,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                       className="w-full p-2 rounded"
                       name="title"
                       value={bookData.title}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, title: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -173,7 +176,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                       className="w-full p-2 rounded"
                       name="description"
                       value={bookData.description}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, description: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -181,10 +184,11 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Edición</label>
                     <Input
                       type="number"
+                      min="0" // No permite números negativos
                       className="w-full p-2 rounded"
                       name="edition"
                       value={bookData.edition}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, edition: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -195,7 +199,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                       className="w-full p-2 rounded"
                       name="author"
                       value={bookData.author}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, author: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -203,10 +207,11 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Cantidad</label>
                     <Input
                       type="number"
+                      min="0" // No permite números negativos
                       className="w-full p-2 rounded"
                       name="quantity"
                       value={bookData.quantity}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, quantity: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -214,10 +219,12 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Precio</label>
                     <Input
                       type="number"
+                      min="0" // No permite números negativos
+                      step="0.01" // Permite valores flotantes
                       className="w-full p-2 rounded"
                       name="price"
                       value={bookData.price}
-                      onChange={(e) => setBookData((prevData) => ({ ...prevData, price: e.target.value }))}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>

@@ -603,6 +603,7 @@ type Reservation {
   status: String
   reservationDate: DateTime
   sucursal: Sucursal
+  cantidad: Int
 }
 
 input ReservationWhereUniqueInput {
@@ -619,12 +620,14 @@ input ReservationWhereInput {
   status: StringNullableFilter
   reservationDate: DateTimeNullableFilter
   sucursal: SucursalWhereInput
+  cantidad: IntFilter
 }
 
 input ReservationOrderByInput {
   id: OrderDirection
   status: OrderDirection
   reservationDate: OrderDirection
+  cantidad: OrderDirection
 }
 
 input ReservationUpdateInput {
@@ -633,6 +636,7 @@ input ReservationUpdateInput {
   status: String
   reservationDate: DateTime
   sucursal: SucursalRelateToOneForUpdateInput
+  cantidad: Int
 }
 
 input SucursalRelateToOneForUpdateInput {
@@ -652,6 +656,7 @@ input ReservationCreateInput {
   status: String
   reservationDate: DateTime
   sucursal: SucursalRelateToOneForCreateInput
+  cantidad: Int
 }
 
 input SucursalRelateToOneForCreateInput {

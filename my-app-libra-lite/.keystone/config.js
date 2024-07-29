@@ -107,7 +107,11 @@ var ReservationConfigList = {
       }
     }),
     reservationDate: (0, import_fields3.timestamp)({ defaultValue: { kind: "now" } }),
-    sucursal: (0, import_fields3.relationship)({ ref: "Sucursal", many: false })
+    sucursal: (0, import_fields3.relationship)({ ref: "Sucursal", many: false }),
+    cantidad: (0, import_fields3.integer)({
+      defaultValue: 1,
+      validation: { isRequired: true, min: 1 }
+    })
   },
   access: import_access3.allowAll
 };

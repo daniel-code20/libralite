@@ -3,10 +3,10 @@ import { CircularProgress } from '@nextui-org/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import AdminBookList from '../components/AdminBookList';
-
 import { AdminSearchBar } from '../components/AdminSearchBar';
 import AdminLogo from '../components/AdminLogo';
 import AdminBookModal from '../../Modal/AdminBookModal';
+import AdminEditBookModal from '../../Modal/AdminEditBookModal';
 
 interface Genders {
   id: string;
@@ -18,7 +18,7 @@ interface Genders {
     image: { url: string };
     author: { name: string };
     price: number;
-    gender: {id: string, name: string};
+    gender: { id: string, name: string };
   }[];
 }
 
@@ -57,6 +57,10 @@ const GET_ALL_GENDERS = gql`
           name
         }
         price
+        gender {
+          id
+          name
+        }
       }
     }
   }
@@ -77,6 +81,11 @@ export const AdminCategoryDetail = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (reviewsError) return <p>Error: {reviewsError.message}</p>;
 
+  // Asegúrate de que data.genders y data.genders[0] existen antes de acceder a ellos
+  if (!data || !data.genders || data.genders.length === 0) {
+    return <p>No data available for this gender.</p>;
+  }
+
   const gender: Genders = data.genders[0];
   const getRatingForBook = (bookId: string) => {
     const review = reviewsData.reviews.find(
@@ -85,7 +94,9 @@ export const AdminCategoryDetail = () => {
     return review ? review.rating : null;
   };
 
-  console.log(gender.id)
+  const bookIds = gender.books.map(book => book.id);
+
+  console.log(gender.id);
 
   return (
     <>
@@ -95,9 +106,12 @@ export const AdminCategoryDetail = () => {
         <h1 className="text-3xl font-bold mb-4">{gender.name}</h1>
         <div className="flex justify-between items-center mb-6">
           <AdminBookModal selectedGenre={gender.id} />
-        </div>
-        <AdminBookList books={gender.books} getRatingForBook={getRatingForBook} />
         
+        </div>
+        <AdminBookList
+          books={gender.books}
+          getRatingForBook={getRatingForBook}
+        />
       </div>
     </>
   );

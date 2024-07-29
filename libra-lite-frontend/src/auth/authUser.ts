@@ -69,3 +69,7 @@ export const checkUserRole = (
 ): boolean => {
   return userRole === requiredRole;
 };
+
+export const logoutUser = () => {
+  localStorage.removeItem('userId');
+};

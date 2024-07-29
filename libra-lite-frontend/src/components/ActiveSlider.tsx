@@ -22,6 +22,7 @@ interface Book {
   author: { name: string };
   image: { id: string; url: string };
   price: number;
+  quantity: number;
 }
 
 interface Review {
@@ -36,6 +37,7 @@ const GET_ALL_BOOKS = gql`
       id
       title
       price
+      quantity
       author {
         name
       }
@@ -125,7 +127,10 @@ export const ActiveSlider = () => {
                       {book.title}
                     </h4>
                     <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
-                      {book.author.name}
+                    {book.author?.name || 'Autor desconocido'}
+                    </h4>
+                    <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
+                    Disponibles: {book.quantity}
                     </h4>
                     <div className="flex items-center space-x-6">
                       <small className="text-sm font-bold text-sky-400/100">

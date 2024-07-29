@@ -1,12 +1,13 @@
 import { NextUIProvider } from '@nextui-org/react';
-import { ApolloClient, InMemoryCache, ApolloProvider,ApolloLink  } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, ApolloLink } from '@apollo/client';
 import { setContext } from "@apollo/client/link/context";
 import ReactDOM from 'react-dom/client';
 import './styles.css';
 import { App } from './App';
 import { BrowserRouter } from 'react-router-dom';
-import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'; 
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import React from 'react';
+import { UserProvider } from '../src/provider/userProvider';
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
@@ -32,13 +33,15 @@ const client = new ApolloClient({
 const root = ReactDOM.createRoot(document.getElementById('root') as Element);
 
 root.render(
-  <ApolloProvider client={client}>
-    <BrowserRouter>
-      <NextUIProvider>
-        <App />
-      </NextUIProvider>
-    </BrowserRouter>
-  </ApolloProvider>
+  <UserProvider>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <NextUIProvider>
+          <App />
+        </NextUIProvider>
+      </BrowserRouter>
+    </ApolloProvider>
+  </UserProvider>
 );
 
 export default client;

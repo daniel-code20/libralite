@@ -56,7 +56,7 @@ export const SignUp = () => {
         mutation: CREATE_USER_MUTATION, // Usa la consulta importada
         variables: { name, email, password },
       });
-      navigate('/login');
+      navigate('/principal');
     } catch (error) {
       setError('Error al crear la cuenta');
     }
