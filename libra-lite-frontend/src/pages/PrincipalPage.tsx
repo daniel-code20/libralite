@@ -8,7 +8,7 @@ export const PrincipalPage = () => {
     <div className="min-h-screen flex flex-col bg-[rgb(25,25,25)]">
       <header>
         <Logo />
-        <SearchBar />
+        
       </header>
       <main className="flex-grow">
         <ActiveSlider />

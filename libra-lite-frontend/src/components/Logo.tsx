@@ -4,6 +4,7 @@ import { logoutUser } from '../auth/authUser';
 import logoImg from '../assets/Logo1.png';
 import { Link } from 'react-router-dom';
 import { Button } from '@nextui-org/button';
+import { SearchBar } from '../components/SearchBar';
 
 const Logo = () => {
   const navigate = useNavigate();
@@ -23,6 +24,13 @@ const Logo = () => {
           </h1>
         </Link>
       </div>
+      <Link to={'/buyslist'}>
+      <h1>Compras</h1>
+      </Link>
+      <Link to={'/reservationlist'}>
+      <h1>Reservaciones</h1>
+      </Link>
+      <SearchBar />
       <Button
         onClick={handleLogout}
         className="bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
@@ -30,6 +38,7 @@ const Logo = () => {
       >
         Cerrar sesión
       </Button>
+      
     </div>
   );
 };

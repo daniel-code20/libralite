@@ -9,7 +9,6 @@ export const AdminPrincipalPage = () => {
   return (
     <>
       <AdminLogo />
-      <AdminSearchBar />
       <AdminActiveSlider />
       <AdminGenderCard />
       <Footer />

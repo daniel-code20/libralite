@@ -3,10 +3,8 @@ import { CircularProgress } from '@nextui-org/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import AdminBookList from '../components/AdminBookList';
-import { AdminSearchBar } from '../components/AdminSearchBar';
 import AdminLogo from '../components/AdminLogo';
 import AdminBookModal from '../../Modal/AdminBookModal';
-import AdminEditBookModal from '../../Modal/AdminEditBookModal';
 
 interface Genders {
   id: string;
@@ -101,7 +99,6 @@ export const AdminCategoryDetail = () => {
   return (
     <>
       <AdminLogo />
-      <AdminSearchBar />
       <div className="h-screen bg-rgb-25-25-25 flex flex-col items-center justify-start text-white py-6 overflow-y-auto">
         <h1 className="text-3xl font-bold mb-4">{gender.name}</h1>
         <div className="flex justify-between items-center mb-6">

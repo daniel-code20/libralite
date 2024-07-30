@@ -3,8 +3,6 @@ import { CircularProgress } from '@nextui-org/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BookList from '../components/BookList';
-
-import { SearchBar } from '../components';
 import Logo from '../components/Logo';
 
 interface Genders {
@@ -90,7 +88,6 @@ export const CategoryDetail = () => {
   return (
     <>
       <Logo />
-      <SearchBar />
       <div className="h-screen bg-rgb-25-25-25 flex flex-col items-center justify-start text-white py-6 overflow-y-auto">
         <h1 className="text-3xl font-bold mb-4">{category.name}</h1>
         <BookList books={category.books} getRatingForBook={getRatingForBook} />

@@ -14,8 +14,8 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center animate__animated animate__fadeIn relative mb-10">
-      <div className="w-[340px] h-[140px] flex justify-center items-center text-white relative">
+    <div className=" flex flex-col items-center justify-center animate__animated animate__fadeIn relative">
+      <div className="w-[240px] h-[140px] flex justify-center items-center text-white relative">
         <Input
           isClearable
           radius="full"
