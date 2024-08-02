@@ -10,9 +10,9 @@ import { Input } from '@nextui-org/react';
 import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { Button } from '@nextui-org/button';
-import '../styles/Login.css';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import { useUser } from '../provider/userProvider';
+import 'animate.css';
 
 export const Login = () => {
   type FormValues = {
@@ -33,7 +33,7 @@ export const Login = () => {
       },
     },
   };
-  
+
   const { setUserId } = useUser();
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -56,79 +56,78 @@ export const Login = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-
-
   return (
     <>
-      <div className="login-container animate__animated animate__fadeIn">
-        <div className="login-image">
+      <div className="flex h-screen animate__animated animate__fadeIn">
+        <div className="hidden md:flex flex-1 justify-center items-center animate__animated animate__floatAnimation">
           <Lottie animationData={animationData} style={{ width: '70%' }} />
         </div>
-        <div className="login-form">
-          <div className="icon-container">
-            <img src={logoImg} alt="logo" className="logo-image" />
-            <h3 className='font-bold bg-gradient-to-tr from-blue-500 to-cyan-400  shadow-lg text-transparent bg-clip-text loading-noreal'>LibraLite</h3>
-          </div>
-          <div className="h1-container">
-            <h1 style={{ color: 'white' }} className="text-2xl font-bold h1-login ">¡Bienvenido a LibraLite!</h1>
-          </div>
-          <p className="p-bienvenida" style={{marginBottom:'20px'}}>
-            Inicia Sesión para ver nuestro stock disponible y disfruta de los
-            mejores libros
-          </p>
-          <Form<FormValues>
-            onSubmit={handleLogin}
-            validations={validations}
-  
-          >
-            <FormItem<FormValues> name="email">
-              <Input
-                type="email"
-                label="Email"
-                radius="sm"
-                variant="bordered"
-                placeholder="example@google.com"
-                className="max-w-lg input-color"
-              />
-            </FormItem>
-            <FormItem<FormValues> name="password">
-              <Input
-                label="Contraseña"
-                variant="bordered"
-                placeholder="Ingresa tu contraseña"
-                radius="sm"
-                endContent={
-                  <button
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
-                    {isVisible ? (
-                      <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    ) : (
-                      <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    )}
-                  </button>
-                }
-                type={isVisible ? 'text' : 'password'}
-                className="max-w-lg input-color"
-              />
-            </FormItem>
-            <Button
-              radius="sm"
-              className="max-w-lg bg-gradient-to-tr from-blue-500 to-cyan-400  text-white shadow-lg"
-              type="submit"
-              style={{ height: '50px'}}
+        <div className="flex-1 flex justify-center items-center bg-white p-6 md:p-12">
+          <div className="w-full max-w-lg shadow-lg p-4 rounded-md ">
+            <div className="flex items-center text-cyan-400 mb-6">
+              <img src={logoImg} alt="logo" className="w-11 mr-3" />
+              <h3 className="font-bold bg-gradient-to-tr from-blue-500 to-cyan-400 text-transparent bg-clip-text loading-noreal">
+                LibraLite
+              </h3>
+            </div>
+            <h1 className="text-2xl font-bold mb-4">¡Bienvenido a LibraLite!</h1>
+            <p className="text-black mb-6">
+              Inicia Sesión para ver nuestro stock disponible y disfruta de los mejores libros
+            </p>
+            <Form<FormValues>
+              onSubmit={handleLogin}
+              validations={validations}
             >
-              Iniciar sesión
-            </Button>
-            {error && <p>{error}</p>}
-            <GoogleLoginButton />
-          </Form>
-          <p className="p-crear-cuenta">
-            <span className="span-create-account">¿No tienes una cuenta?</span>
-            <Link to="/signup" className='bg-gradient-to-tr from-blue-500 to-cyan-400 shadow-lg text-transparent bg-clip-text loading-noreal'>Crear Cuenta</Link>
-          </p>
+              <FormItem<FormValues> name="email">
+                <Input
+                  type="email"
+                  label="Email"
+                  radius="sm"
+                  variant="flat"
+                  placeholder="example@google.com"
+                  className="w-full text-black drop-shadow-md"
+                />
+              </FormItem>
+              <FormItem<FormValues> name="password">
+                <Input
+                  label="Contraseña"
+                  variant="flat"
+                  placeholder="Ingresa tu contraseña"
+                  radius="sm"
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
+                  type={isVisible ? 'text' : 'password'}
+                  className="w-full text-black drop-shadow-md"
+                />
+              </FormItem>
+              <Button
+                variant='shadow'
+                radius="sm"
+                className="w-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white  h-12 font-semibold"
+                type="submit"
+              >
+                Iniciar sesión
+              </Button>
+              {error && <p className="text-red-500 mt-4">{error}</p>}
+            </Form>
+            <p className="mt-4 flex items-center">
+              <span className="text-black">¿No tienes una cuenta?</span>
+              <Link to="/signup" className="bg-gradient-to-tr from-blue-500 to-cyan-400 text-transparent bg-clip-text loading-noreal ml-2">
+                Crear Cuenta
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </>

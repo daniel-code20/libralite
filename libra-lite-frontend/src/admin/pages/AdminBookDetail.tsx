@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { Button, Image } from '@nextui-org/react';
+import { Image } from '@nextui-org/react';
 import estrella from '../../assets/estrella (1).png';
-import AdminLogo from '../components/AdminLogo';
 import AdminEditBookModal from '../../Modal/AdminEditBookModal';
 import DeleteBookButton from '../../graphql/DeleteBookButton';
-import { Genders } from '../../graphql/types';
+import AdminSideBar from '../components/AdminSideBar';
+import { AdminSearchBar } from '../components/AdminSearchBar';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const GET_BOOK_DETAILS = gql`
   query Books($id: ID!) {
@@ -51,6 +52,7 @@ const GET_ALL_REVIEWS = gql`
 `;
 
 export const AdminBookDetail = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const { id } = useParams<{ id: string }>();
@@ -112,68 +114,84 @@ export const AdminBookDetail = () => {
 
   return (
     <>
-      <AdminLogo />
-      <div className="min-h-screen flex items-center justify-center text-white animate__animated animate__fadeIn">
-        {book && (
-          <div className="flex flex-row items-start space-x-6">
-            <Image
-              src={book.image.url}
-              alt={book.title}
-              width={300}
-              height={200}
-              radius="sm"
-            />
-            <div>
-              <div className="flex items-center space-x-6">
-                <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-                <div className="flex items-center space-x-1">
-                  <img
-                    alt="star"
-                    src={estrella}
-                    style={{ width: '12px', height: '12px' }}
+      <div className="flex min-h-screen bg-gray-100">
+        <AdminSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
+          <header className="bg-white shadow-md flex items-center justify-between p-4 relative ml-4 mr-4 rounded-md">
+            <button className="lg:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              {sidebarOpen ? (
+                <FaTimes className="h-6 w-6 text-black" />
+              ) : (
+                <FaBars className="h-6 w-6 text-black" />
+              )}
+            </button>
+            <AdminSearchBar />
+          </header>
+          <div className="flex-grow flex flex-col p-4 lg:p-8">
+            <div className="flex flex-col lg:flex-row lg:space-x-6 max-w-6xl mx-auto">
+              {book && (
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 shadow-lg bg-white rounded-md w-full">
+                  <Image
+                    src={book.image.url}
+                    alt={book.title}
+                    width={300}
+                    height={200}
+                    radius="sm"
                   />
-                  <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
-                    {getRatingForBook()} / 5
-                  </span>
+                  <div>
+                    <div className="flex items-center space-x-6">
+                      <h1 className="text-3xl font-bold mb-2 mt-4 ml-4">{book.title}</h1>
+                      <div className="flex items-center space-x-1">
+                        <img
+                          alt="star"
+                          src={estrella}
+                          style={{ width: '12px', height: '12px' }}
+                        />
+                        <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
+                          {getRatingForBook()} / 5
+                        </span>
+                      </div>
+                    </div>
+                    <h2 className="text-l mb-2 ml-4 font-regular ">
+                      by {book.author?.name || 'Autor desconocido'}
+                    </h2>
+                    <div className="max-w-md">
+                      <p className="text-md mb-2 ml-4 font-regular text-gray-600">
+                        {book.description}
+                      </p>
+                    </div>
+                    <div className="flex items-start space-x-1">
+                      <p className="text-md mb-4 ml-4 font-semibold ">
+                        Género:
+                      </p>
+                      <p className="text-md mb-4 font-regular text-gray-600">
+                        {gender.name}
+                      </p>
+                    </div>
+                    <div className="flex items-start space-x-1">
+                      <p className="text-lg mb-4 ml-4 font-semibold">
+                        Disponibles:
+                      </p>
+                      <p className="text-lg mb-4 font-regular text-gray-600">
+                        {book.quantity} Unidades
+                      </p>
+                    </div>
+                    <div className="flex items-start space-x-1">
+                      <p className="text-lg mb-4 ml-4 font-semibold">
+                        Precio:
+                      </p>
+                      <p className="text-lg mb-4 font-regular text-gray-600">
+                        {formatPrice(book.price)}
+                      </p>
+                    </div>
+                    <AdminEditBookModal selectedGenre={gender.id} bookId={book.id} />
+                    <DeleteBookButton BookId={book.id} />
+                  </div>
                 </div>
-              </div>
-              <h2 className="text-l mb-2 font-regular text-gray-300">
-                by {book.author?.name || 'Autor desconocido'}
-              </h2>
-              <div className="max-w-md">
-                <p className="text-md mb-2 font-regular text-gray-500">
-                  {book.description}
-                </p>
-              </div>
-              <div className="flex items-start space-x-1">
-                <p className="text-md mb-4 font-semibold text-gray-300">
-                  Género:
-                </p>
-                <p className="text-md mb-4 font-regular text-gray-400">
-                  {gender.name}
-                </p>
-              </div>
-              <div className="flex items-start space-x-1">
-                <p className="text-lg mb-4 font-semibold text-gray-300">
-                  Disponibles:
-                </p>
-                <p className="text-lg mb-4 font-regular text-gray-400">
-                  {book.quantity} Unidades
-                </p>
-              </div>
-              <div className="flex items-start space-x-1">
-                <p className="text-lg mb-4 font-semibold text-gray-300">
-                  Precio:
-                </p>
-                <p className="text-lg mb-4 font-regular text-gray-400">
-                  {formatPrice(book.price)}
-                </p>
-              </div>
-              <AdminEditBookModal selectedGenre={gender.id} bookId={book.id} />
-              <DeleteBookButton BookId={book.id} />
+              )}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </>
   );

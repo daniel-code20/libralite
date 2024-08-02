@@ -95,9 +95,9 @@ const AdminCategoryModal = () => {
   return (
     <>
       <Button
-        color="success" radius="sm" variant="shadow"
+        color="primary" radius="sm" variant="shadow"
         onClick={onOpen}
-        style={{ marginBottom: '20px' }}
+        className='mt-4 text-white'
       >
         Agregar Género
       </Button>

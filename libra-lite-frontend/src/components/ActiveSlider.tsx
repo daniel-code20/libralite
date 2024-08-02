@@ -5,16 +5,9 @@ import 'swiper/css/free-mode';
 import { FreeMode, Pagination } from 'swiper/modules';
 import { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CircularProgress,
-  Image,
-} from '@nextui-org/react';
+import { CircularProgress, Image } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import estrella from '../assets/estrella (1).png';
 
 interface Book {
   id: string;
@@ -73,15 +66,10 @@ export const ActiveSlider = () => {
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getRatingForBook = (bookId: string) => {
-    const review = reviewsData.reviews.find((review: Review) => review.book.id === bookId);
-    return review ? review.rating : null;
-  };
-
   return (
-    <div className="flex items-start justify-center mb-24 animate__animated animate__fadeIn">
-      <div style={{ padding: '16px', width: 'calc(100% - 80px)' }}>
-        <h2 className="text-2xl font-bold mb-6 text-white">Recomendados</h2>
+    <div className="flex items-start justify-center mb-8 animate__animated animate__fadeIn shadow-md bg-white rounded-md overflow-hidden max-w-full">
+      <div className="w-full px-4">
+        <h2 className="text-2xl font-bold mb-4 text-black mt-4">Populares</h2>
         <Swiper
           breakpoints={{
             0: {
@@ -97,6 +85,10 @@ export const ActiveSlider = () => {
               spaceBetween: 15,
             },
             1024: {
+              slidesPerView: 4,
+              spaceBetween: 15,
+            },
+            1280: {
               slidesPerView: 5,
               spaceBetween: 15,
             },
@@ -109,42 +101,18 @@ export const ActiveSlider = () => {
             bulletClass: 'swiper-pagination-bullet',
           }}
           modules={[FreeMode, Pagination]}
+          className="py-4"
+          style={{ height: 'auto' }}
         >
           {filteredBooks.map((book: Book) => (
             <SwiperSlide key={book.id}>
               <Link to={`/book/${book.id}`}>
-                <Card className="bg-zinc-800 shadow-xl mb-10 flex-row" radius="sm">
-                  <CardBody>
-                    <Image
-                      className="w-full object-cover h-[140px]"
-                      radius="md"
-                      alt={book.title}
-                      src={book.image.url}
-                    />
-                  </CardBody>
-                  <CardFooter className="text-small flex flex-col items-start ml-0">
-                    <h4 className="font-bold text-base text-white line-clamp-2 mb-2">
-                      {book.title}
-                    </h4>
-                    <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
-                    {book.author?.name || 'Autor desconocido'}
-                    </h4>
-                    <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
-                    Disponibles: {book.quantity}
-                    </h4>
-                    <div className="flex items-center space-x-6">
-                      <small className="text-sm font-bold text-sky-400/100">
-                        ${book.price}
-                      </small>
-                      <div className="flex items-center space-x-1">
-                        <img alt="star" src={estrella} style={{ width: '12px', height: '12px' }} />
-                        <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
-                          {getRatingForBook(book.id)} / 5
-                        </span>
-                      </div>
-                    </div>
-                  </CardFooter>
-                </Card>
+                <Image
+                  className="w-full object-cover rounded-md"
+                  alt={book.title}
+                  src={book.image.url}
+                  style={{ height: '200px' }} // Ajusta la altura según sea necesario
+                />
               </Link>
             </SwiperSlide>
           ))}

@@ -142,11 +142,12 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
   return (
     <>
       <Button
-        color="success"
+        color="primary"
         radius="sm"
         variant="shadow"
         onClick={onOpen}
         style={{ marginBottom: '20px' }}
+        className='text-white font-semibold'
       >
         Agregar Libro
       </Button>

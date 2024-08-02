@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useUser } from '../provider/userProvider'; // Asegúrate de ajustar la ruta
 import { PaymentForm, FormValues } from '../forms/PaymentForm';
 import { Button } from '@nextui-org/react';
-import Logo from '../components/Logo';
+import Logo from '../components/SideBar';
 import Swal from 'sweetalert2';
 import {UPDATE_BOOK_STOCK_MUTATION} from '../graphql/mutation/queries'
 
@@ -144,21 +144,21 @@ export const BuyPage: React.FC<BuyPageProps> = () => {
   return (
     <>
       <Logo />
-      <div className="min-h-screen flex flex-col items-center justify-center text-white ">
+      <div className="min-h-screen flex flex-col items-center justify-center ">
         <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
         <PaymentForm onSubmit={handleSubmit}>
           <div className="flex items-start space-x-1">
-            <p className="text-lg mb-2 font-bold text-gray-300">
+            <p className="text-lg mb-2 font-bold text-black">
               Total de unidades:
             </p>
-            <p className="text-lg mb-2 font-semibold text-gray-400">
+            <p className="text-lg mb-2 font-semibold text-black">
               {selectedQuantity}
             </p>
           </div>
           <Button
             type="submit"
             radius="sm"
-            className="w-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
+            className="w-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg font-bold"
             style={{ height: '50px' }}
           >
             Pagar ${total.toFixed(2)}

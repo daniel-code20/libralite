@@ -9,6 +9,7 @@ interface Book {
   author: { name: string };
   image: { url: string };
   price: number;
+  description: string; // Añadido para el ejemplo
 }
 
 interface BookListProps {
@@ -18,67 +19,56 @@ interface BookListProps {
 
 const BookList: React.FC<BookListProps> = ({ books, getRatingForBook }) => {
   return (
-    <>
-    
-      <div className="flex items-start justify-center animate__animated animate__fadeIn">
-        
-        <div
-          style={{
-            padding: '16px',
-            width: 'calc(100% - 80px)',
-            height: '600px',
-          }}
-        >
-            
-          {books.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-              {books.map((book, index) => (
-                <Link key={index} to={`/book/${book.id}`}>
-                  <Card
-                    className="bg-zinc-800 shadow-xl relative flex-row"
-                    radius="sm"
-                  >
-                    <CardBody>
-                      <Image
-                        className="w-full object-cover h-[140px]"
-                        radius="md"
-                        alt={book.title}
-                        src={book.image.url}
-                      />
-                    </CardBody>
-                    <CardFooter className="text-small flex flex-col items-start">
-                      <h4 className="font-bold text-base text-white line-clamp-2 mb-2">
-                        {book.title}
-                      </h4>
-                      <h4 className="text-xs font-regular text-gray-300 line-clamp-2 mb-2">
+    <div >
+      {books.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          {books.map((book) => (
+            <Link key={book.id} to={`/book/${book.id}`}>
+              <Card className="max-w-[340px] bg-white shadow-xl flex flex-col lg:flex-row" radius="sm">
+                <CardBody className=" flex justify-center items-center lg:w-1/3 lg:items-start lg:pr-4">
+                  <Image
+                    className="object-cover w-full h-40"
+                    radius="md"
+                    alt={book.title}
+                    src={book.image.url}
+                  />
+                </CardBody>
+                <CardFooter className="p-4 lg:w-2/3 flex flex-col">
+                  <div className="flex flex-col mb-2">
+                    <h4 className="font-bold text-base text-black mb-1">
+                      {book.title}
+                    </h4>
+                    <h5 className="text-xs font-regular text-gray-600 mb-1">
                       {book.author?.name || 'Autor desconocido'}
-                      </h4>
-                      <div className="flex items-center space-x-6">
-                        <small className="text-sm font-bold text-sky-400/100">
-                          ${book.price}
-                        </small>
-                        <div className="flex items-center space-x-1">
-                          <img
-                            alt="star"
-                            src={estrella}
-                            style={{ width: '12px', height: '12px' }}
-                          />
-                          <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
-                            {getRatingForBook(book.id)} / 5
-                          </span>
-                        </div>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <p>No hay libros disponibles en este género.</p>
-          )}
+                    </h5>
+                    <p className="text-xs font-regular text-gray-600">
+                      {book.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between mt-auto">
+                    <small className="text-sm font-bold text-sky-400">
+                      ${book.price}
+                    </small>
+                    <div className="flex items-center space-x-1">
+                      <img
+                        alt="star"
+                        src={estrella}
+                        className="w-3 h-3"
+                      />
+                      <span className="text-xs font-regular text-sky-400">
+                        {getRatingForBook(book.id)} / 5
+                      </span>
+                    </div>
+                  </div>
+                </CardFooter>
+              </Card>
+            </Link>
+          ))}
         </div>
-      </div>
-    </>
+      ) : (
+        <p className="text-center">No hay libros disponibles en este género.</p>
+      )}
+    </div>
   );
 };
 

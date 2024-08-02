@@ -3,7 +3,7 @@ import { useQuery, gql, useApolloClient } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import { Button } from '@nextui-org/button';
-import Logo from '../components/Logo';
+import Logo from '../components/SideBar';
 import { ReservationForm, FormValues } from '../forms/ReservationForm';
 import Swal from 'sweetalert2';
 import { UPDATE_BOOK_STOCK_MUTATION } from '../graphql/mutation/queries'
@@ -163,14 +163,14 @@ export const ReservationPage: React.FC<ReservationPageProps> = () => {
   return (
     <>
       <Logo />
-      <div className="min-h-screen flex flex-col items-center justify-center text-white ">
+      <div className="min-h-screen flex flex-col items-center justify-center  ">
         <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
         <ReservationForm onSubmit={handleSubmit}>
           <div className="flex items-start space-x-1">
-            <p className="text-lg mb-2 font-bold text-gray-300">
+            <p className="text-lg mb-2 font-bold text-black">
               Total de unidades:
             </p>
-            <p className="text-lg mb-2 font-semibold text-gray-400">
+            <p className="text-lg mb-2 font-semibold text-black">
               {selectedQuantity}
             </p>
           </div>

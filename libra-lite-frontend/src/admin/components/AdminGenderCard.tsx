@@ -42,17 +42,16 @@ export const AdminGenderCard = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen animate__animated animate__fadeIn">
-        <div className="px-8 w-full max-w-[1200px]">
+      <div className="flex flex-col items-start justify-start animate__animated animate__fadeIn shadow-md bg-white rounded-md w-full overflow-hidden">
+      <div className="px-8 w-full">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-white">Géneros</h1>
+          <h1 className="text-2xl font-bold text-black mt-4">Géneros</h1>
             <AdminCategoryModal />
-
           </div>
-          <div className="gap-4 grid grid-cols-2 sm:grid-cols-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.genders.map((item: Genders) => (
               <Card
-                className="max-w-[400px] bg-zinc-800 shadow-xl mb-6"
+                className="w-full max-w-[300px] mx-auto drop-shadow-xl mb-6"
                 key={item.id}
               >
                 <Link to={`/admin-category/${item.id}`}>
@@ -65,14 +64,14 @@ export const AdminGenderCard = () => {
                       width={40}
                     />
                     <div className="flex flex-col">
-                      <p className="font-bold text-lg text-white line-clamp-2">
+                    <p className="font-bold text-lg text-black line-clamp-2">
                         {item.name ? item.name : 'No Category'}
                       </p>
                     </div>
                   </CardHeader>
                   <Divider />
                   <CardBody>
-                    <p className="text-lg text-white">
+                  <p className="text-lg text-black">
                       Make beautiful websites regardless of your design
                       experience.
                     </p>

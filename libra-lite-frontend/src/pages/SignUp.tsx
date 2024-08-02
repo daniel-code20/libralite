@@ -11,7 +11,6 @@ import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { Button } from '@nextui-org/button';
 import logoImg from '../assets/Logo1.png';
 import GoogleLoginButton from '../components/GoogleLoginButton';
-import '../styles/signUp.css';
 
 export const SignUp = () => {
   type FormValues = {
@@ -53,7 +52,7 @@ export const SignUp = () => {
     const { name, email, password } = data;
     try {
       await client.mutate({
-        mutation: CREATE_USER_MUTATION, // Usa la consulta importada
+        mutation: CREATE_USER_MUTATION,
         variables: { name, email, password },
       });
       navigate('/principal');
@@ -67,28 +66,26 @@ export const SignUp = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div className="crear-cuenta-container animate__animated animate__fadeIn" style={{overflowY: 'auto'}}>
-      <div className="crear-cuenta-form">
-        <div className="icon-container">
-          <img src={logoImg} alt="logo" className="logo-image" />
-          <h3 className="font-bold bg-gradient-to-tr from-blue-500 to-cyan-400  shadow-lg text-transparent bg-clip-text loading-noreal">LibraLite</h3>
-        </div>
-        <div className="h1-container">
-            <h1 style={{ color: 'white' }} className="text-2xl font-bold h1-signup">Crear Cuenta</h1>
+    <div className="flex h-screen overflow-hidden animate__animated animate__fadeIn">
+      <div className="flex-1 flex justify-center items-center p-6 md:p-12 bg-white">
+      <div className="w-full max-w-lg shadow-lg p-4 rounded-md ">
+          <div className="flex items-center text-cyan-400 mb-6">
+            <img src={logoImg} alt="logo" className="w-11 mr-3" />
+            <h3 className="font-bold bg-gradient-to-tr from-blue-500 to-cyan-400 text-transparent bg-clip-text loading-noreal">LibraLite</h3>
           </div>
-          <p className="p-bienvenida">
+          <h1 className="text-2xl font-bold mb-4">Crear Cuenta</h1>
+          <p className="text-black mb-6">
             Crea una cuenta para ver nuestro stock disponible y disfruta de los
             mejores libros
           </p>
-        <div className="form-group">
           <Form<FormValues> onSubmit={handleSignUp} validations={validations}>
             <FormItem<FormValues> name="name">
               <Input
                 type="text"
                 label="Nombre"
-                variant="bordered"
+                variant="flat"
                 radius="sm"
-                className="max-w-lg input-color"
+                className="w-full text-black drop-shadow-md"
               />
             </FormItem>
             <FormItem<FormValues> name="email">
@@ -96,15 +93,15 @@ export const SignUp = () => {
                 type="email"
                 label="Email"
                 radius="sm"
-                variant="bordered"
+                variant="flat"
                 placeholder="example@google.com"
-                className="max-w-lg input-color"
+                className="w-full text-black drop-shadow-md"
               />
             </FormItem>
             <FormItem<FormValues> name="password">
               <Input
                 label="Contraseña"
-                variant="bordered"
+                variant="flat"
                 radius="sm"
                 placeholder="Ingresa tu contraseña"
                 endContent={
@@ -121,13 +118,13 @@ export const SignUp = () => {
                   </button>
                 }
                 type={isVisible ? 'text' : 'password'}
-                className="max-w-lg input-color"
+                className="w-full text-black drop-shadow-md"
               />
             </FormItem>
             <FormItem<FormValues> name="confirmPassword">
               <Input
                 label="Confirma tu contraseña"
-                variant="bordered"
+                variant="flat"
                 radius="sm"
                 endContent={
                   <button
@@ -143,31 +140,30 @@ export const SignUp = () => {
                   </button>
                 }
                 type={isVisible ? 'text' : 'password'}
-                className="max-w-lg input-color"
+                className="w-full text-black drop-shadow-md"
               />
             </FormItem>
             {error && <p>{error}</p>}
             <Button
               radius="sm"
-              className="max-w-lg bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
+              className="w-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg h-12"
               type="submit"
-              style={{ height: '50px' }}
             >
               Crear Cuenta
             </Button>
             {error && <p>{error}</p>}
-            <GoogleLoginButton />
           </Form>
+          <p className="mt-4 flex items-center">
+            <span className="text-black">¿Ya tienes una cuenta?</span>
+            <Link to="/login" className="bg-gradient-to-tr from-blue-500 to-cyan-400 text-transparent bg-clip-text loading-noreal ml-2">
+              Iniciar Sesión
+            </Link>
+          </p>
         </div>
-        <p className="p-iniciar-sesion">
-          <span className="span-create-account">¿Ya tienes una cuenta?</span>
-          <Link to="/login" className='bg-gradient-to-tr from-blue-500 to-cyan-400 shadow-lg text-transparent bg-clip-text loading-noreal'>Iniciar Sesión</Link>
-        </p>
       </div>
-      <div className="imagen-container">
+      <div className="hidden md:flex flex-1 justify-center items-center animate__animated animate__floatAnimation">
         <Lottie animationData={animationData} style={{ width: '70%' }} />
       </div>
     </div>
   );
 };
-

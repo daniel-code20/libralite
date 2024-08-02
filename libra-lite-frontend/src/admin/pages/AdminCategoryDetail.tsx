@@ -1,10 +1,12 @@
 import { useQuery, gql } from '@apollo/client';
 import { CircularProgress } from '@nextui-org/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AdminBookList from '../components/AdminBookList';
-import AdminLogo from '../components/AdminLogo';
+import AdminSideBar from '../components/AdminSideBar';
 import AdminBookModal from '../../Modal/AdminBookModal';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { AdminSearchBar } from '../components/AdminSearchBar';
 
 interface Genders {
   id: string;
@@ -17,6 +19,7 @@ interface Genders {
     author: { name: string };
     price: number;
     gender: { id: string, name: string };
+    description: string;
   }[];
 }
 
@@ -55,6 +58,7 @@ const GET_ALL_GENDERS = gql`
           name
         }
         price
+        description
         gender {
           id
           name
@@ -64,7 +68,8 @@ const GET_ALL_GENDERS = gql`
   }
 `;
 
-export const AdminCategoryDetail = () => {
+export const AdminCategoryDetail: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { loading, error, data } = useQuery(GET_ALL_GENDERS, {
     variables: { id },
@@ -79,7 +84,6 @@ export const AdminCategoryDetail = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (reviewsError) return <p>Error: {reviewsError.message}</p>;
 
-  // Asegúrate de que data.genders y data.genders[0] existen antes de acceder a ellos
   if (!data || !data.genders || data.genders.length === 0) {
     return <p>No data available for this gender.</p>;
   }
@@ -92,24 +96,29 @@ export const AdminCategoryDetail = () => {
     return review ? review.rating : null;
   };
 
-  const bookIds = gender.books.map(book => book.id);
-
-  console.log(gender.id);
-
   return (
-    <>
-      <AdminLogo />
-      <div className="h-screen bg-rgb-25-25-25 flex flex-col items-center justify-start text-white py-6 overflow-y-auto">
-        <h1 className="text-3xl font-bold mb-4">{gender.name}</h1>
-        <div className="flex justify-between items-center mb-6">
+    <div className="flex min-h-screen bg-gray-100">
+      <AdminSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
+        <header className="bg-white shadow-md flex items-center justify-between p-4 relative rounded-md">
+          <button className="lg:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
+            {sidebarOpen ? (
+              <FaTimes className="h-6 w-6 text-black" />
+            ) : (
+              <FaBars className="h-6 w-6 text-black" />
+            )}
+          </button>
+            <h1 className="text-3xl font-bold text-black">{gender.name}</h1>
+            <AdminSearchBar />
           <AdminBookModal selectedGenre={gender.id} />
-        
-        </div>
-        <AdminBookList
-          books={gender.books}
-          getRatingForBook={getRatingForBook}
-        />
+        </header>
+        <main className="flex-grow bg-gray-100 p-4 lg:p-8">
+          <AdminBookList
+            books={gender.books}
+            getRatingForBook={getRatingForBook}
+          />
+        </main>
       </div>
-    </>
+    </div>
   );
 };

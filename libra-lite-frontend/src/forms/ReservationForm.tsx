@@ -77,16 +77,16 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
     <Form
       onSubmit={handleSubmit}
       validations={validations}
-      className="p-6 rounded-lg w-full max-w-md"
-      style={{ backgroundColor: 'rgb(19, 19, 19)' }}
+      className="p-6 rounded-lg w-full max-w-md shadow-lg"
+      style={{ backgroundColor: 'rgb(255, 255, 255)' }}
     >
       <div className="mb-2">
-        <h2 className="text-xl font-bold text-white">Información de pago</h2>
+        <h2 className="text-xl font-bold text-black">Información de pago</h2>
         <FormItem name="cardNumber">
           <Input
             type="text"
             label="Número de Tarjeta"
-            className="w-full p-2 rounded text-white"
+            className="w-full p-2 rounded text-black"
             required
             variant="bordered"
             radius="sm"
@@ -98,7 +98,7 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
               type="text"
               label="Fecha de Expiración"
               placeholder="MM/AA"
-              className="w-full p-2 rounded text-white"
+              className="w-full p-2 rounded text-black"
               required
               variant="bordered"
               radius="sm"
@@ -108,7 +108,7 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
             <Input
               type="text"
               label="CVV"
-              className="w-full p-2 rounded text-white"
+              className="w-full p-2 rounded text-black"
               required
               variant="bordered"
               radius="sm"
@@ -117,7 +117,7 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
         </div>
       </div>
       <div className="mb-2">
-        <h2 className="text-xl font-bold text-white">
+        <h2 className="text-xl font-bold text-black">
           Información de contacto
         </h2>
 
@@ -137,7 +137,7 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
               type="text"
               label="Teléfono"
               placeholder="+503 2525-2525"
-              className="w-full p-2 rounded text-white"
+              className="w-full p-2 rounded text-black"
               required
               variant="bordered"
               radius="sm"

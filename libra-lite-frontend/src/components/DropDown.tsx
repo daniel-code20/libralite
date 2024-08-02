@@ -46,7 +46,7 @@ const DropDown: React.FC<DropDownProps> = ({ onSelectSucursal }) => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="bordered" className="text-white" radius="sm">
+        <Button variant="bordered" className="text-black" radius="sm" color='default'>
           {selectedSucursal}
         </Button>
       </DropdownTrigger>
