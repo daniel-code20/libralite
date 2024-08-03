@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "./keystone.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
+}
