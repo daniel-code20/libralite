@@ -14,7 +14,7 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="relative flex items-center p-4 animate__animated animate__fadeIn ">
+    <div className="relative flex items-center p-4 animate__animated animate__fadeIn">
       <Input
         isClearable
         radius="sm"
@@ -48,7 +48,7 @@ export const SearchBar = () => {
         onChange={handleInputChange}
       />
       {showResults && (
-        <div className="absolute top-full left-0 w-full z-50 mt-2">
+        <div className="absolute top-full left-0 w-full z-50 mt-2 bg-white shadow-lg rounded-lg max-h-60 overflow-auto">
           <SearchResult searchTerm={searchTerm} />
         </div>
       )}

@@ -63,7 +63,7 @@ export const Login = () => {
           <Lottie animationData={animationData} style={{ width: '70%' }} />
         </div>
         <div className="flex-1 flex justify-center items-center bg-white p-6 md:p-12">
-          <div className="w-full max-w-lg shadow-lg p-4 rounded-md ">
+          <div className="w-full max-w-lg shadow-2xl p-4 rounded-md ">
             <div className="flex items-center text-cyan-400 mb-6">
               <img src={logoImg} alt="logo" className="w-11 mr-3" />
               <h3 className="font-bold bg-gradient-to-tr from-blue-500 to-cyan-400 text-transparent bg-clip-text loading-noreal">

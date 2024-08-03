@@ -52,10 +52,10 @@ export const AdminBuysList: React.FC = () => {
 
     return (
         <>
-            <div className="flex min-h-screen bg-gray-100">
+            <div className="flex min-h-screen bg-gray-100 overflow-y-auto">
                 <AdminSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
-                    <header className="bg-white shadow-md flex items-center p-4">
+                    <header className="bg-white shadow-md flex items-center p-4 ml-4 mr-4">
                         <button
                             className="lg:hidden p-2 text-black"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -102,10 +102,10 @@ export const AdminBuysList: React.FC = () => {
                                 <table className="min-w-full bg-white">
                                     <thead>
                                         <tr>
-                                            <th className="py-2 px-4 border-b border-gray-700 text-black">Cliente</th>
-                                            <th className="py-2 px-4 border-b border-gray-700 text-black">Dirección</th>
-                                            <th className="py-2 px-4 border-b border-gray-700 text-black">Fecha de compra</th>
-                                            <th className="py-2 px-4 border-b border-gray-700 text-black">Libro</th>
+                                            <th className="py-2 px-4 border-b border-gray-700 text-black text-left">Usuario</th>
+                                            <th className="py-2 px-4 border-b border-gray-700 text-black text-left">Dirección</th>
+                                            <th className="py-2 px-4 border-b border-gray-700 text-black text-left">Fecha de compra</th>
+                                            <th className="py-2 px-4 border-b border-gray-700 text-black text-left">Libro</th>
                                         </tr>
                                     </thead>
                                     <tbody>

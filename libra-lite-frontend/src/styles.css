@@ -4,6 +4,6 @@
 
 body {
   background-color: rgb(240, 240, 240);
-  overflowY: 'auto'; 
+  overflow-y: auto; 
 }
 

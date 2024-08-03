@@ -35,6 +35,32 @@ const CREATE_BOOK_MUTATION = gql`
   }
 `;
 
+const CREATE_AUTHOR_MUTATION = gql`
+  mutation CreateAuthor($data: [AuthorCreateInput!]!) {
+    createAuthors(data: $data) {
+      id
+      name
+    }
+  }
+`;
+
+const GET_AUTHOR_BY_NAME_QUERY = gql`
+  query GetAuthorByName($name: String!) {
+    authors(where: { name: { equals: $name } }) {
+      id
+      name
+    }
+  }
+`;
+
+const CHECK_BOOK_TITLE_QUERY = gql`
+  query CheckBookTitle($title: String!) {
+    books(where: { title: { equals: $title } }) {
+      id
+    }
+  }
+`;
+
 interface AdminBookModalProps {
   selectedGenre: string;
 }
@@ -48,8 +74,8 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
     edition: '',
     author: '',
     quantity: '',
-    price: '0.00', // Inicializa con un valor flotante válido
-    gender: '', // Guardamos el ID del género seleccionado
+    price: '0.00',
+    gender: '',
   });
   const client = useApolloClient();
   const formRef = useRef<HTMLFormElement>(null);
@@ -59,7 +85,6 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedImage(e.target.files);
-      console.log('Imagen seleccionada:', e.target.files);
     }
   };
 
@@ -79,13 +104,52 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
       return;
     }
 
-    const file = selectedImage[0]; // Asumimos que solo se sube una imagen
-
-    // Convertir el precio a entero (por ejemplo, centavos)
+    const file = selectedImage[0];
     const priceInCents = Math.round(parseFloat(bookData.price) * 100);
 
     try {
-      const { data } = await client.mutate({
+      // Primero, verifica si el título del libro ya existe
+      const { data: existingBookData } = await client.query({
+        query: CHECK_BOOK_TITLE_QUERY,
+        variables: { title: bookData.title },
+        fetchPolicy: 'no-cache',
+      });
+
+      if (existingBookData.books.length > 0) {
+        // Si el título ya existe, muestra una alerta
+        Swal.fire({
+          title: 'Título Duplicado',
+          text: 'El título del libro ya existe. Por favor, elige otro título.',
+          icon: 'warning',
+          confirmButtonText: 'Ok',
+        });
+        return;
+      }
+
+      // Verifica si el autor ya existe
+      const { data: existingAuthorData } = await client.query({
+        query: GET_AUTHOR_BY_NAME_QUERY,
+        variables: { name: bookData.author },
+        fetchPolicy: 'no-cache',
+      });
+
+      let authorId;
+      if (existingAuthorData.authors.length > 0) {
+        // Usa el ID del autor existente
+        authorId = existingAuthorData.authors[0].id;
+      } else {
+        // Crea el autor si no existe
+        const { data: createdAuthorData } = await client.mutate({
+          mutation: CREATE_AUTHOR_MUTATION,
+          variables: {
+            data: [{ name: bookData.author }],
+          },
+        });
+        authorId = createdAuthorData.createAuthors[0].id;
+      }
+
+      // Crea el libro
+      await client.mutate({
         mutation: CREATE_BOOK_MUTATION,
         context: {
           headers: {
@@ -100,8 +164,9 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
             description: bookData.description,
             edition: parseInt(bookData.edition, 10),
             quantity: parseInt(bookData.quantity, 10),
-            price: priceInCents, // Enviar el precio como entero en centavos
-            gender: { connect: { id: selectedGenre } }, // ID como string
+            price: priceInCents,
+            gender: { connect: { id: selectedGenre } },
+            author: { connect: { id: authorId } },
             image: { upload: file },
           },
         },
@@ -124,8 +189,8 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
         edition: '',
         author: '',
         quantity: '',
-        price: '0.00', // Reinicia el precio a un valor flotante válido
-        gender: selectedGenre, // Limpiar el estado del libro después de crearlo
+        price: '0.00',
+        gender: selectedGenre,
       });
       setSelectedImage(null);
       formRef.current?.reset();
@@ -185,7 +250,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Edición</label>
                     <Input
                       type="number"
-                      min="0" // No permite números negativos
+                      min="0"
                       className="w-full p-2 rounded"
                       name="edition"
                       value={bookData.edition}
@@ -208,7 +273,7 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Cantidad</label>
                     <Input
                       type="number"
-                      min="0" // No permite números negativos
+                      min="0"
                       className="w-full p-2 rounded"
                       name="quantity"
                       value={bookData.quantity}
@@ -220,8 +285,8 @@ const AdminBookModal: React.FC<AdminBookModalProps> = ({ selectedGenre }) => {
                     <label>Precio</label>
                     <Input
                       type="number"
-                      min="0" // No permite números negativos
-                      step="0.01" // Permite valores flotantes
+                      min="0"
+                      step="0.01"
                       className="w-full p-2 rounded"
                       name="price"
                       value={bookData.price}

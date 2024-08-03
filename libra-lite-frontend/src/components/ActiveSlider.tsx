@@ -1,11 +1,6 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/free-mode';
-import { FreeMode, Pagination } from 'swiper/modules';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { CircularProgress, Image } from '@nextui-org/react';
+import { CircularProgress } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
@@ -16,12 +11,6 @@ interface Book {
   image: { id: string; url: string };
   price: number;
   quantity: number;
-}
-
-interface Review {
-  id: string;
-  rating: number;
-  book: { title: string; id: string };
 }
 
 const GET_ALL_BOOKS = gql`
@@ -42,81 +31,60 @@ const GET_ALL_BOOKS = gql`
   }
 `;
 
-const GET_ALL_REVIEWS = gql`
-  query GetAllReviews {
-    reviews {
-      rating
-      book {
-        id
-      }
-    }
-  }
-`;
-
 export const ActiveSlider = () => {
   const { loading: booksLoading, error: booksError, data: booksData } = useQuery(GET_ALL_BOOKS);
-  const { loading: reviewsLoading, error: reviewsError, data: reviewsData } = useQuery(GET_ALL_REVIEWS);
   const [searchTerm] = useState('');
 
-  if (booksLoading || reviewsLoading) return <CircularProgress label="Loading..." />;
-  if (booksError) return <p>Error: {booksError.message}</p>;
-  if (reviewsError) return <p>Error: {reviewsError.message}</p>;
+  const sliderRef = useRef<HTMLDivElement>(null);
 
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  if (booksLoading) return <CircularProgress label="Loading..." />;
+  if (booksError) return <p>Error: {booksError.message}</p>;
+
+  // Filtra los libros para mostrar solo los que tienen cantidad mayor a 0
   const filteredBooks = booksData.books.filter((book: Book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) && book.quantity > 0
   );
 
   return (
     <div className="flex items-start justify-center mb-8 animate__animated animate__fadeIn shadow-md bg-white rounded-md overflow-hidden max-w-full">
       <div className="w-full px-4">
         <h2 className="text-2xl font-bold mb-4 text-black mt-4">Populares</h2>
-        <Swiper
-          breakpoints={{
-            0: {
-              slidesPerView: 1,
-              spaceBetween: 15,
-            },
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 15,
-            },
-            768: {
-              slidesPerView: 3,
-              spaceBetween: 15,
-            },
-            1024: {
-              slidesPerView: 4,
-              spaceBetween: 15,
-            },
-            1280: {
-              slidesPerView: 5,
-              spaceBetween: 15,
-            },
-          }}
-          freeMode={true}
-          pagination={{
-            clickable: true,
-            dynamicBullets: true,
-            clickableClass: 'swiper-pagination-clickable',
-            bulletClass: 'swiper-pagination-bullet',
-          }}
-          modules={[FreeMode, Pagination]}
-          className="py-4"
-          style={{ height: 'auto' }}
-        >
-          {filteredBooks.map((book: Book) => (
-            <SwiperSlide key={book.id}>
-              <Link to={`/book/${book.id}`}>
-                <Image
-                  className="w-full object-cover rounded-md"
-                  alt={book.title}
-                  src={book.image.url}
-                  style={{ height: '200px' }} // Ajusta la altura según sea necesario
-                />
-              </Link>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="relative">
+          <button onClick={scrollLeft} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-blue-400 hover:bg-blue-500 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center z-10">
+            &lt;
+          </button>
+          <div ref={sliderRef} className="flex overflow-x-scroll space-x-4 scrollbar-hide py-4 w-full">
+            {filteredBooks.map((book: Book) => (
+              <div key={book.id} className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5">
+                <Link to={`/book/${book.id}`} className="block w-full h-full">
+                  <div className="flex flex-col items-center mb-4">
+                    <img
+                      className="w-full object-cover shadow-lg"
+                      alt={book.title}
+                      src={book.image.url}
+                      style={{ width: '150px', height: '200px' }}
+                    />
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+          <button onClick={scrollRight} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-blue-400 hover:bg-blue-500 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center z-10">
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );

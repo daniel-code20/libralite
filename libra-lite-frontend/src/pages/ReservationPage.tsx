@@ -3,10 +3,11 @@ import { useQuery, gql, useApolloClient } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import { Button } from '@nextui-org/button';
-import Logo from '../components/SideBar';
 import { ReservationForm, FormValues } from '../forms/ReservationForm';
 import Swal from 'sweetalert2';
-import { UPDATE_BOOK_STOCK_MUTATION } from '../graphql/mutation/queries'
+import { UPDATE_BOOK_STOCK_MUTATION } from '../graphql/mutation/queries';
+import SideBar from '../components/SideBar';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const GET_SUCURSAL = gql`
 query Sucursals {
@@ -14,7 +15,6 @@ query Sucursals {
     id
   }
 }
-
 `;
 
 const GET_BOOK_DETAILS = gql`
@@ -70,6 +70,7 @@ interface Sucursals {
 }
 
 export const ReservationPage: React.FC<ReservationPageProps> = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const { id } = useParams<{ id: string }>();
@@ -96,7 +97,6 @@ export const ReservationPage: React.FC<ReservationPageProps> = () => {
   }, [selectedQuantity, data]);
 
   const handleSubmit = async (formData: FormValues) => {
-
     try {
       if (!userId) throw new Error('User ID is required'); // Verifica que el userId esté disponible
 
@@ -158,31 +158,49 @@ export const ReservationPage: React.FC<ReservationPageProps> = () => {
     return <p>No se encontraron sucursales.</p>;
   }
   const sucursal = dataSucursal.sucursals[0];
-  console.log(userId)
+  console.log(userId);
 
   return (
     <>
-      <Logo />
-      <div className="min-h-screen flex flex-col items-center justify-center  ">
-        <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
-        <ReservationForm onSubmit={handleSubmit}>
-          <div className="flex items-start space-x-1">
-            <p className="text-lg mb-2 font-bold text-black">
-              Total de unidades:
-            </p>
-            <p className="text-lg mb-2 font-semibold text-black">
-              {selectedQuantity}
-            </p>
-          </div>
-          <Button
-            type="submit"
-            radius="sm"
-            className="w-full  bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
-            style={{ height: '50px' }}
-          >
-            Reservar ${total.toFixed(2)}
-          </Button>
-        </ReservationForm>
+      <div className="flex min-h-screen bg-gray-100 overflow-y-auto">
+        <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
+        <header className="bg-white shadow-md flex items-center justify-between p-4 relative rounded-md ml-4 mr-4">
+            <button
+              className="lg:hidden p-2 text-black"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? (
+                <FaTimes className="h-6 w-6" />
+              ) : (
+                <FaBars className="h-6 w-6" />
+              )}
+            </button>
+              <h1 className="text-2xl font-bold mb-2">{book.title}</h1>
+          </header>
+          <main className="flex-grow flex items-center justify-center p-4 overflow-x-auto">
+            <div className="max-w-lg w-full"> {/* Asegura un ancho máximo para el contenido */}
+              <ReservationForm onSubmit={handleSubmit}>
+                <div className="flex items-start space-x-1">
+                  <p className="text-lg mb-2 font-bold text-black">
+                    Total de unidades:
+                  </p>
+                  <p className="text-lg mb-2 font-semibold text-black">
+                    {selectedQuantity}
+                  </p>
+                </div>
+                <Button
+                  type="submit"
+                  radius="sm"
+                  className="w-full bg-gradient-to-tr from-blue-500 to-cyan-400 text-white shadow-lg"
+                  style={{ height: '50px' }}
+                >
+                  Reservar ${(total / 100).toFixed(2)}
+                </Button>
+              </ReservationForm>
+            </div>
+          </main>
+        </div>
       </div>
     </>
   );

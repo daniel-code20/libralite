@@ -90,6 +90,14 @@ export const AdminBookDetail = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflowX = 'hidden';
+    } else {
+      document.body.style.overflowX = 'auto';
+    }
+  }, [sidebarOpen]);
+
   if (bookLoading || genderLoading || reviewsLoading) return <p>Cargando...</p>;
   if (bookError || genderError) return <p>Error: {bookError?.message || genderError?.message}</p>;
   if (reviewsError) return <p>Error: {reviewsError.message}</p>;
@@ -114,10 +122,10 @@ export const AdminBookDetail = () => {
 
   return (
     <>
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex min-h-screen bg-gray-100 overflow-y-auto">
         <AdminSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
-          <header className="bg-white shadow-md flex items-center justify-between p-4 relative ml-4 mr-4 rounded-md">
+          <header className="bg-white shadow-md flex items-center justify-between p-4 relative ml-4 mr-4 rounded-md z-20">
             <button className="lg:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
               {sidebarOpen ? (
                 <FaTimes className="h-6 w-6 text-black" />
@@ -130,7 +138,7 @@ export const AdminBookDetail = () => {
           <div className="flex-grow flex flex-col p-4 lg:p-8">
             <div className="flex flex-col lg:flex-row lg:space-x-6 max-w-6xl mx-auto">
               {book && (
-                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 shadow-lg bg-white rounded-md w-full">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 ">
                   <Image
                     src={book.image.url}
                     alt={book.title}
@@ -140,28 +148,19 @@ export const AdminBookDetail = () => {
                   />
                   <div>
                     <div className="flex items-center space-x-6">
-                      <h1 className="text-3xl font-bold mb-2 mt-4 ml-4">{book.title}</h1>
-                      <div className="flex items-center space-x-1">
-                        <img
-                          alt="star"
-                          src={estrella}
-                          style={{ width: '12px', height: '12px' }}
-                        />
-                        <span className="text-xs font-regular text-sky-400/100 line-clamp-1">
-                          {getRatingForBook()} / 5
-                        </span>
-                      </div>
+                      <h1 className="text-3xl font-bold mb-2 mt-4 ">{book.title}</h1>
+                  
                     </div>
-                    <h2 className="text-l mb-2 ml-4 font-regular ">
+                    <h2 className="text-l mb-2  font-regular ">
                       by {book.author?.name || 'Autor desconocido'}
                     </h2>
                     <div className="max-w-md">
-                      <p className="text-md mb-2 ml-4 font-regular text-gray-600">
+                      <p className="text-md mb-2 font-regular text-gray-600">
                         {book.description}
                       </p>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <p className="text-md mb-4 ml-4 font-semibold ">
+                      <p className="text-md mb-4  font-semibold ">
                         Género:
                       </p>
                       <p className="text-md mb-4 font-regular text-gray-600">
@@ -169,7 +168,7 @@ export const AdminBookDetail = () => {
                       </p>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <p className="text-lg mb-4 ml-4 font-semibold">
+                      <p className="text-lg mb-4 font-semibold">
                         Disponibles:
                       </p>
                       <p className="text-lg mb-4 font-regular text-gray-600">
@@ -177,15 +176,17 @@ export const AdminBookDetail = () => {
                       </p>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <p className="text-lg mb-4 ml-4 font-semibold">
+                      <p className="text-lg mb-4  font-semibold">
                         Precio:
                       </p>
                       <p className="text-lg mb-4 font-regular text-gray-600">
-                        {formatPrice(book.price)}
+                      ${(book.price / 100).toFixed(2)}
                       </p>
                     </div>
-                    <AdminEditBookModal selectedGenre={gender.id} bookId={book.id} />
-                    <DeleteBookButton BookId={book.id} />
+                    <div className="flex space-x-4"> 
+                      <AdminEditBookModal selectedGenre={gender.id} bookId={book.id} />
+                      <DeleteBookButton BookId={book.id} />
+                    </div>
                   </div>
                 </div>
               )}

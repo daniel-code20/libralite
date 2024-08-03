@@ -48,7 +48,7 @@ export const AdminSearchBar = () => {
         onChange={handleInputChange}
       />
       {showResults && (
-        <div className="absolute top-full left-0 w-full z-50 mt-2">
+        <div className="absolute top-full left-0 w-full z-50 mt-2 bg-white shadow-lg rounded-lg max-h-60 overflow-auto">
           <AdminSearchResult searchTerm={searchTerm} />
         </div>
       )}

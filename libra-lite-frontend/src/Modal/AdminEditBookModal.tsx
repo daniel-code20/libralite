@@ -109,7 +109,7 @@ const AdminEditBookModal: React.FC<AdminEditBookModalProps> = ({ bookId, selecte
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'quantity' && (parseInt(value, 10) <= 0)) {
+    if (name === 'quantity' && (parseFloat(value) <= 0)) {
       return; // No actualiza el estado si la cantidad es menor o igual a cero
     }
     setBookData((prevData) => ({
@@ -196,6 +196,7 @@ const AdminEditBookModal: React.FC<AdminEditBookModalProps> = ({ bookId, selecte
         radius="sm"
         variant="shadow"
         onClick={onOpen}
+        className="w-full lg:w-auto"
       >
         Actualizar
       </Button>

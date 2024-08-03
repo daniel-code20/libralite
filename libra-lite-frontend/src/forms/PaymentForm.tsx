@@ -22,39 +22,70 @@ export type FormValues = {
 const validations: FormValidations<FormValues> = {
   cardNumber: {
     required: 'El número de tarjeta es requerido',
+    pattern: {
+      value: /^\d{16}$/,
+      message: 'El número de tarjeta debe tener 16 dígitos'
+    }
   },
   cardName: {
     required: 'El nombre en la tarjeta es requerido',
+    pattern: {
+      value: /^[A-Za-z\s]+$/,
+      message: 'El nombre solo puede contener letras y espacios'
+    }
   },
   expiryDate: {
     required: 'La fecha de expiración es requerida',
+    pattern: {
+      value: /^(0[1-9]|1[0-2])\/?([0-9]{2})$/,
+      message: 'La fecha de expiración debe estar en formato MM/AA'
+    }
+  },
+  cvv: {
+    required: 'El CVV es requerido',
+    pattern: {
+      value: /^\d{3}$/,
+      message: 'El CVV debe tener 3 dígitos'
+    }
   },
   postal: {
     required: 'El código postal es requerido',
+    pattern: {
+      value: /^\d{5}$/,
+      message: 'El código postal debe tener 5 dígitos'
+    }
   },
   address: {
     required: 'La dirección es requerida',
   },
   phone: {
     required: 'El número de teléfono es requerido',
+    pattern: {
+      value: /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+      message: 'El número de teléfono no es válido'
+    }
   },
   city: {
     required: 'La ciudad es requerida',
-  },
-  cvv: {
-    required: 'El CVV es requerido',
-    validate(value) {
-      if (value.length !== 3) {
-        return 'El CVV debe tener 3 caracteres';
-      }
-    },
-  },
+  }
 };
 
 export const PaymentForm: React.FC<PaymentFormProps> = ({
   children,
   onSubmit
 }) => {
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const formattedValue = value.replace(
+      /[^0-9]/g, // Remover caracteres no numéricos
+      ''
+    ).replace(
+      /(\d{2})(\d{2})/, // Insertar el slash
+      '$1/$2'
+    );
+    e.target.value = formattedValue.slice(0, 5); // Limitar a 5 caracteres (MM/AA)
+  };
+
   const handleSubmit = (data: FormValues) => {
     Swal.fire({
       title: '¡Muchas Gracias!',
@@ -89,6 +120,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             radius="sm"
           />
         </FormItem>
+        
         <div className="flex space-x-4">
           <FormItem name="expiryDate" className="w-1/2">
             <Input
@@ -99,6 +131,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
               required
               variant="bordered"
               radius="sm"
+              onChange={handleExpiryDateChange}
             />
           </FormItem>
           <FormItem name="cvv" className="w-1/2">

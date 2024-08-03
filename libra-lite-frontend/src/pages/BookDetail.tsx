@@ -109,10 +109,10 @@ export const BookDetail: React.FC = () => {
   const isOutOfStock = book.quantity === 0;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 overflow-y-auto">
       <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-0'} lg:ml-60`}>
-      <header className="bg-white shadow-md flex items-center justify-between p-4 relative ml-4 mr-4 rounded-md">
+        <header className="bg-white shadow-md flex items-center justify-between p-4 relative ml-4 mr-4 rounded-md z-20">
           <button className="lg:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
             {sidebarOpen ? (
               <FaTimes className="h-6 w-6 text-black" />
@@ -125,7 +125,7 @@ export const BookDetail: React.FC = () => {
         <div className="flex-grow flex flex-col p-4 lg:p-8">
           <div className="flex flex-col lg:flex-row lg:space-x-6 max-w-6xl mx-auto">
             {book && (
-              <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 shadow-lg bg-white rounded-md w-full">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 ">
                 <Image
                   src={book.image.url}
                   alt={book.title}
@@ -134,19 +134,10 @@ export const BookDetail: React.FC = () => {
                   radius="sm"
                   className="w-full h-full"
                 />
-                <div className="flex flex-col p-4 space-y-4 w-full lg:w-auto">
+                <div className='mt-4'>
                   <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-6">
                     <h1 className="text-2xl lg:text-3xl font-bold mb-2">{book.title}</h1>
-                    <div className="flex items-center space-x-1 mt-2">
-                      <img
-                        alt="star"
-                        src={estrella}
-                        className="w-4 h-4"
-                      />
-                      <span className="text-xs font-regular text-sky-400/100">
-                        {getRatingForBook()} / 5
-                      </span>
-                    </div>
+
                   </div>
 
                   <h2 className="text-lg mb-2 font-regular">
@@ -204,7 +195,7 @@ export const BookDetail: React.FC = () => {
                       Total:
                     </p>
                     <p className="text-lg mb-2 font-regular">
-                      ${total.toFixed(2)}
+                      ${(total / 100).toFixed(2)}
                     </p>
                   </div>
                   {isOutOfStock ? (
@@ -212,7 +203,7 @@ export const BookDetail: React.FC = () => {
                       Agotado
                     </p>
                   ) : (
-                    <div className="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
+                    <div className="flex space-x-4">
                       <Button
                         color="primary"
                         radius="sm"
@@ -246,5 +237,7 @@ export const BookDetail: React.FC = () => {
         </div>
       </div>
     </div>
+
+
   );
 };

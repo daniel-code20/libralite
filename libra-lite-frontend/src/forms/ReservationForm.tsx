@@ -23,23 +23,34 @@ export type FormValues = {
 const validations: FormValidations<FormValues> = {
   cardNumber: {
     required: 'El número de tarjeta es requerido',
+    pattern: {
+      value: /^\d{16}$/,
+      message: 'El número de tarjeta debe tener 16 dígitos',
+    },
   },
   cardName: {
     required: 'El nombre en la tarjeta es requerido',
   },
   expiryDate: {
     required: 'La fecha de expiración es requerida',
+    pattern: {
+      value: /^(0[1-9]|1[0-2])\/?([0-9]{2})$/,
+      message: 'La fecha de expiración debe estar en el formato MM/AA',
+    },
   },
   cvv: {
     required: 'El CVV es requerido',
-    validate(value) {
-      if (value.length !== 3) {
-        return 'El CVV debe tener 3 caracteres';
-      }
+    pattern: {
+      value: /^\d{3}$/,
+      message: 'El CVV debe tener 3 caracteres',
     },
   },
   phone: {
     required: 'El teléfono es requerido',
+    pattern: {
+      value: /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+      message: 'El número de teléfono no es válido',
+    },
   },
   reservationDate: {
     required: 'La fecha limite para retirar el libro es requerida',
@@ -60,6 +71,10 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
     const formDataWithISODate = { ...data, reservationDate: reservationDateISO, sucursal: selectedSucursal };
 
     Swal.fire({
+      title: '¡Reserva completada!',
+      text: 'Tu reserva ha sido registrada exitosamente.',
+      icon: 'success',
+      confirmButtonText: 'Ok'
     }).then((result) => {
       if (result.isConfirmed) {
         window.location.href = '/principal';
@@ -71,6 +86,14 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
 
   const handleSelectSucursal = (sucursal: string) => {
     setSelectedSucursal(sucursal);
+  };
+
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -130,6 +153,7 @@ export const ReservationForm: React.FC<PaymentFormProps> = ({
               radius="sm"
               required
               variant="bordered"
+              min={getTodayDate()}
             />
           </FormItem>
           <FormItem name="phone" className="w-1/2">
