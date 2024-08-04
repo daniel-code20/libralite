@@ -40,6 +40,7 @@ export default withAuth(
       //   see https://keystonejs.com/docs/guides/choosing-a-database#title
       provider: 'postgresql',
       url: 'postgresql://postgres:VCqffUKJgppiQhUPTVeHsEQrviqzxtlA@postgres.railway.internal:5432/railway',
+      onConnect: async context => { /* ... */ },
     },
     lists,
     session,
