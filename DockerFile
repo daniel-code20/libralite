@@ -1,6 +1,7 @@
-# Usa una imagen base de Node.js
-FROM node:18
+FROM node
 
+ARG RAILWAY_ENVIRONMENT
+RAILWAY_DOCKERFILE_PATH=/build/Dockerfile
 # Establece el directorio de trabajo
 WORKDIR /app
 
