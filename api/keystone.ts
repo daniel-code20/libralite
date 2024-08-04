@@ -1,7 +1,8 @@
 import { config } from '@keystone-6/core';
 import { lists } from '../schema'; // Ajusta la ruta según tu estructura de proyecto
 import { withAuth, session } from '../auth'; // Ajusta la ruta según tu estructura de proyecto
-
+import { ServerConfig } from '@keystone-6/core/types';
+import { BaseKeystoneTypeInfo } from '@keystone-6/core/types';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -26,7 +27,7 @@ const keystoneConfig = withAuth(
       cors: { origin: '*', credentials: true, methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] },
       port: 3000,
       maxFileSize: 200 * 1024 * 1024,
-    },
+    } as ServerConfig<BaseKeystoneTypeInfo>,
     storage: {
       my_local_images: {
         kind: 'local',
@@ -41,5 +42,4 @@ const keystoneConfig = withAuth(
   })
 );
 
-// Exportar la configuración de Keystone directamente
 export default keystoneConfig;
