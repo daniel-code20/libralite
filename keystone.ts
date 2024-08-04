@@ -39,9 +39,8 @@ export default withAuth(
       //   for more information on what database might be appropriate for you
       //   see https://keystonejs.com/docs/guides/choosing-a-database#title
       provider: 'postgresql',
-      url: process.env.DATABASE_URL ||  'DATABASE_URL_TO_REPLACE' "
-      
-      onConnect: async context => { /* ... */ },
+      url: process.env.DATABASE_URL ||  'DATABASE_URL_TO_REPLACE' 
+
     },
     lists,
     session,
