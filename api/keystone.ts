@@ -41,4 +41,5 @@ const keystoneConfig = withAuth(
   })
 );
 
-export default keystoneConfig.server;
+// Exportar la configuración de Keystone directamente
+export default keystoneConfig;
