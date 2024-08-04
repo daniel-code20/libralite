@@ -14,7 +14,7 @@ RUN yarn install
 COPY . .
 
 # Establece las variables de entorno necesarias
-ENV PORT=3000
+ENV PORT 3000
 ENV DATABASE_URL http://localhost:3000
 ENV S3_BUCKET_NAME keystone-test
 ENV S3_REGION ap-southeast-2
