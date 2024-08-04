@@ -1,30 +1,27 @@
-# Usar una imagen oficial de Node.js como base
+# Usa una imagen base de Node.js
 FROM node:18
 
-# Establecer el directorio de trabajo
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar package.json y yarn.lock al directorio de trabajo
+# Copia el yarn.lock y package.json
 COPY package.json yarn.lock ./
 
-# Instalar dependencias
-RUN yarn install --frozen-lockfile
+# Instala las dependencias
+RUN yarn install
 
-# Copiar el resto del código de la aplicación
+# Copia el resto del código de la aplicación
 COPY . .
 
-# Establecer variables de entorno
-ENV S3_BUCKET_NAME=keystone-test
-ENV S3_REGION=ap-southeast-2
-ENV S3_ACCESS_KEY_ID=keystone
-ENV S3_SECRET_ACCESS_KEY=keystone
-ENV ASSET_BASE_URL=http://localhost:3000
+# Establece las variables de entorno necesarias
+ENV PORT=3000
+ENV DATABASE_URL=http://localhost:3000
 
-# Construir la aplicación
+# Compila el proyecto
 RUN yarn build
 
-# Exponer el puerto en el que se ejecutará la aplicación
+# Expone el puerto en el que la aplicación va a correr
 EXPOSE 3000
 
-# Definir el comando para iniciar la aplicación
+# Comando para iniciar la aplicación
 CMD ["yarn", "start"]
