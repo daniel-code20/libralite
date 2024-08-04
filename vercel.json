@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
       {
-        "src": "keystone.ts",
+        "src": "api/keystone.ts",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/keystone.ts"
+        "dest": "/api/keystone.ts"
       }
     ]
   }
