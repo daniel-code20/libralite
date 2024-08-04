@@ -13,6 +13,13 @@ RUN yarn install --frozen-lockfile
 # Copiar el resto del código de la aplicación
 COPY . .
 
+# Establecer variables de entorno
+ENV S3_BUCKET_NAME=keystone-test
+ENV S3_REGION=ap-southeast-2
+ENV S3_ACCESS_KEY_ID=keystone
+ENV S3_SECRET_ACCESS_KEY=keystone
+ENV ASSET_BASE_URL=http://localhost:3000
+
 # Construir la aplicación
 RUN yarn build
 
