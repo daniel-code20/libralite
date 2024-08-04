@@ -1,13 +1,16 @@
 {
-    "$schema": "https://railway.app/railway.schema.json",
-    "build": {
-      "builder": "nixpacks",
-      "buildCommand": "echo building!"
-      },
-    "deploy": {
-      "startCommand": "echo starting!",
-      "healthcheckPath": "/",
-      "healthcheckTimeout": 100,
-      "restartPolicyType": "never"
-      }
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "echo building!"
+  },
+  "deploy": {
+    "runtime": "V2",
+    "numReplicas": 1,
+    "startCommand": "echo starting!",
+    "healthcheckPath": "/",
+    "sleepApplication": false,
+    "restartPolicyType": "NEVER",
+    "healthcheckTimeout": 100
   }
+}
