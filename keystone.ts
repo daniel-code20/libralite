@@ -45,7 +45,7 @@ export default withAuth(
     lists,
     session,
     server: {
-      cors: { origin: '*', credentials: true,  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']},
+      cors: { origin: 'https://frabjous-conkies-d49737.netlify.app/', credentials: true,  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']},
       port: 3000,
       maxFileSize: 200 * 1024 * 1024,
      
