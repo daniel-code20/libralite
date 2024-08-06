@@ -20,17 +20,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const {
-  // The S3 Bucket Name used to store assets
-  S3_BUCKET_NAME: bucketName = 'keystone-test',
-  // The region of the S3 bucket
-  S3_REGION: region = 'ap-southeast-2',
-  // The Access Key ID and Secret that has read/write access to the S3 bucket
-  S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
-  S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
-  // The base URL to serve assets from
-  ASSET_BASE_URL: baseUrl = 'http://localhost:3000',
-} = process.env;
+const bucketName = process.env.S3_BUCKET_NAME as string;
+const region = process.env.S3_REGION as string;
+const accessKeyId = process.env.S3_ACCESS_KEY_ID as string;
+const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY as string;
 
 export default withAuth(
   config({
@@ -51,20 +44,14 @@ export default withAuth(
      
     },
     storage: {
-      my_local_images: {
-        // Images that use this store will be stored on the local machine
-        kind: 'local',
-        // This store is used for the image field type
-        type: 'image',
-        // The URL that is returned in the Keystone GraphQL API
-        generateUrl: (path) => `${baseUrl}/images${path}`,
-        // The route that will be created in Keystone's backend to serve the images
-        serverRoute: {
-          path: '/images',
-        },
-        // Set serverRoute to null if you don't want a route to be created in Keystone
-        // serverRoute: null
-        storagePath: 'public/images',
+      my_s3_files: {
+        kind: 's3',
+        type: 'file',
+        bucketName,
+        region,
+        accessKeyId,
+        secretAccessKey,
+        signed: { expiry: 3600 },
       },
     },
   })
