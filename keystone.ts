@@ -29,7 +29,7 @@ const {
   S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
   S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
   // The base URL to serve assets from
-  ASSET_BASE_URL: baseUrl = 'https://libralite-production.up.railway.app/',
+  ASSET_BASE_URL: baseUrl = 'http://localhost:3000',
 } = process.env;
 
 export default withAuth(
