@@ -20,10 +20,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const bucketName = process.env.S3_BUCKET_NAME as string;
-const region = process.env.S3_REGION as string;
-const accessKeyId = process.env.S3_ACCESS_KEY_ID as string;
-const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY as string;
+const bucketName = process.env.S3_BUCKET_NAME || 'S3_BUCKET_NAME';
+const region = process.env.S3_REGION || 'S3_REGION';
+const accessKeyId = process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID';
+const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || 'S3_SECRET_ACCESS_KEY';
 
 export default withAuth(
   config({
