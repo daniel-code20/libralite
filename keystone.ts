@@ -3,7 +3,7 @@ import { config } from '@keystone-6/core';
 import { lists } from './schema';
 import { withAuth, session } from './auth';
 
-const baseUrl = 'https://libralite-production.up.railway.app/';
+const baseUrl = 'https://libralite-production.up.railway.app/api/graphql';
 
 export default withAuth(
   config({
