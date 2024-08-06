@@ -29,7 +29,7 @@ const {
   S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
   S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
   // The base URL to serve assets from
-  ASSET_BASE_URL: baseUrl = 'https://libralite-production.up.railway.app/api/graphql',
+  ASSET_BASE_URL: baseUrl = 'http://localhost:3000',
 } = process.env;
 
 export default withAuth(
@@ -45,21 +45,26 @@ export default withAuth(
     lists,
     session,
     server: {
-      cors: { origin: 'https://frabjous-conkies-d49737.netlify.app/', credentials: true,  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']},
+      cors: { origin: '*', credentials: true,  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']},
       port: 3000,
       maxFileSize: 200 * 1024 * 1024,
      
     },
     storage: {
       my_local_images: {
+        // Images that use this store will be stored on the local machine
         kind: 'local',
-      type: 'image',
-      generateUrl: (path) => `${baseUrl}/images${path}`,
-      serverRoute: {
-        path: '/images',
-      },
-      storagePath: 'public/images',
+        // This store is used for the image field type
+        type: 'image',
+        // The URL that is returned in the Keystone GraphQL API
+        generateUrl: (path) => `${baseUrl}/images${path}`,
+        // The route that will be created in Keystone's backend to serve the images
+        serverRoute: {
+          path: '/images',
         },
+        // Set serverRoute to null if you don't want a route to be created in Keystone
+        // serverRoute: null
+        storagePath: 'public/images',
       },
     },
   })
