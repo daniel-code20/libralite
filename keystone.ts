@@ -53,18 +53,22 @@ export default withAuth(
     storage: {
       my_local_images: {
         // Images that use this store will be stored on the local machine
-        kind: 'local',
+        kind: 's3',
         // This store is used for the image field type
-        type: 'image',
+        type: 'file',
         // The URL that is returned in the Keystone GraphQL API
         generateUrl: (path) => `${baseUrl}/images${path}`,
         // The route that will be created in Keystone's backend to serve the images
-        serverRoute: {
-          path: '/images',
+        bucketName,
+      // The S3 bucket region pulled from the S3_REGION environment variable above
+      region,
+      // The S3 Access Key ID pulled from the S3_ACCESS_KEY_ID environment variable above
+      accessKeyId,
+      // The S3 Secret pulled from the S3_SECRET_ACCESS_KEY environment variable above
+      secretAccessKey,
+      // The S3 links will be signed so they remain private
+      signed: { expiry: 5000 },
         },
-        // Set serverRoute to null if you don't want a route to be created in Keystone
-        // serverRoute: null
-        storagePath: 'public/images',
       },
     },
   })
