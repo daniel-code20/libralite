@@ -3,10 +3,16 @@ import { config } from '@keystone-6/core';
 import { lists } from './schema';
 import { withAuth, session } from './auth';
 
-const S3_BUCKET_NAME=process.env.S3_BUCKET_NAME || 'S3_BUCKET_NAME_TO_REPLACE'
-const S3_REGION=process.env.S3_REGION || 'S3_REGION_TO_REPLACE'
-const S3_ACCESS_KEY_ID=process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID_TO_REPLACE'
-const S3_SECRET_ACCESS_KEY=process.env.S3_SECRET_ACCESS_KEY|| 'S3_SECRET_ACCESS_KEY_TO_REPLACE'
+const {
+  // The S3 Bucket Name used to store assets
+  S3_BUCKET_NAME: bucketName = 'keystone-test',
+  // The region of the S3 bucket
+  S3_REGION: region = 'ap-southeast-2',
+  // The Access Key ID and Secret that has read/write access to the S3 bucket
+  S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
+  S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
+  // The base URL to serve assets from
+} = process.env;
 
 export default withAuth(
   config({
@@ -25,10 +31,10 @@ export default withAuth(
       my_s3_files: {
         kind: 's3',
         type: 'file',
-        bucketName: S3_BUCKET_NAME,
-        region: S3_REGION,
-        accessKeyId: S3_ACCESS_KEY_ID,
-        secretAccessKey: S3_SECRET_ACCESS_KEY,
+        bucketName,
+        region,
+        accessKeyId,
+        secretAccessKey,
       },
     },
   })
