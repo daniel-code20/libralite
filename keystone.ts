@@ -3,17 +3,10 @@ import { config } from '@keystone-6/core';
 import { lists } from './schema';
 import { withAuth, session } from './auth';
 
-const {
-  // The S3 Bucket Name used to store assets
-  S3_BUCKET_NAME: bucketName = 'keystone-test',
-  // The region of the S3 bucket
-  S3_REGION: region = 'ap-southeast-2',
-  // The Access Key ID and Secret that has read/write access to the S3 bucket
-  S3_ACCESS_KEY_ID: accessKeyId = 'keystone',
-  S3_SECRET_ACCESS_KEY: secretAccessKey = 'keystone',
-  // The base URL to serve assets from
-} = process.env;
-
+const S3_BUCKET_NAME=process.env.S3_BUCKET_NAME || 'S3_BUCKET_NAME'
+const S3_REGION=process.env.S3_REGION || 'S3_REGION'
+const S3_ACCESS_KEY_ID=process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID'
+const S3_SECRET_ACCESS_KEY=process.env.S3_SECRET_ACCESS_KEY|| 'S3_SECRET_ACCESS_KEY'
 
 export default withAuth(
   config({
@@ -35,15 +28,13 @@ export default withAuth(
         // This store is used for the file field type
         type: 'file',
         // The S3 bucket name pulled from the S3_BUCKET_NAME environment variable above
-        bucketName,
+        bucketName: S3_BUCKET_NAME,
         // The S3 bucket region pulled from the S3_REGION environment variable above
-        region,
+        region: S3_REGION,
         // The S3 Access Key ID pulled from the S3_ACCESS_KEY_ID environment variable above
-        accessKeyId,
+        accessKeyId: S3_ACCESS_KEY_ID,
         // The S3 Secret pulled from the S3_SECRET_ACCESS_KEY environment variable above
-        secretAccessKey,
-        // The S3 links will be signed so they remain private
-        signed: { expiry: 5000 },
+        secretAccessKey: S3_SECRET_ACCESS_KEY,
       },
     },
   })
