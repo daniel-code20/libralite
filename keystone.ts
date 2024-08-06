@@ -20,11 +20,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const bucketName = process.env.S3_BUCKET_NAME || 'S3_BUCKET_NAME';
-const region = process.env.S3_REGION || 'S3_REGION';
-const accessKeyId = process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID';
-const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || 'S3_SECRET_ACCESS_KEY';
-
 export default withAuth(
   config({
     db: {
@@ -47,10 +42,10 @@ export default withAuth(
       my_s3_files: {
         kind: 's3',
         type: 'file',
-        bucketName,
-        region,
-        accessKeyId,
-        secretAccessKey,
+        bucketName: process.env.S3_BUCKET_NAME || 'S3_BUCKET_NAME',
+        region: process.env.S3_REGION || 'S3_REGION',
+        accessKeyId: process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID',
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'S3_SECRET_ACCESS_KEY',
         signed: { expiry: 3600 },
       },
     },
