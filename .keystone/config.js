@@ -41,7 +41,7 @@ var BookConfigList = {
     gender: (0, import_fields.relationship)({ ref: "Gender.books", many: false }),
     quantity: (0, import_fields.integer)({ defaultValue: 0 }),
     price: (0, import_fields.integer)({ defaultValue: 0 }),
-    image: (0, import_fields.relationship)({ ref: "Image", many: true }),
+    image: (0, import_fields.file)({ storage: "my_s3_files" }),
     compras: (0, import_fields.relationship)({ ref: "Buy.libro", many: true }),
     publisher: (0, import_fields.relationship)({ ref: "Publisher.books", many: false }),
     reservations: (0, import_fields.relationship)({ ref: "Reservation.book", many: true })
@@ -200,7 +200,7 @@ var GenderConfigList = {
   fields: {
     name: (0, import_fields7.text)(),
     books: (0, import_fields7.relationship)({ ref: "Book.gender", many: true }),
-    image: (0, import_fields7.relationship)({ ref: "Image", many: true })
+    image: (0, import_fields7.file)({ storage: "my_s3_files" })
   },
   access: import_access7.allowAll
 };
