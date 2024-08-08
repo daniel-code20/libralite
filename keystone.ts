@@ -19,7 +19,7 @@ export default withAuth(
     storage: {
       my_s3_files: {
         kind: 's3',
-        type: 'image',
+        type: 'file',
         bucketName: process.env.S3_BUCKET_NAME || 'libralite',
         region: process.env.S3_REGION || 'us-east-2',
         accessKeyId: process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID',
