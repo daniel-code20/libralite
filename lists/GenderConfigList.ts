@@ -6,7 +6,7 @@ export const GenderConfigList: ListConfig<any> = {
   fields: {
     name: text(),
     books: relationship({ ref: "Book.gender", many: true }),
-    image: relationship({ ref: 'Image', many: true })
+    image: file({ storage: 'my_s3_files' }),
   },
   access: allowAll,
 };
