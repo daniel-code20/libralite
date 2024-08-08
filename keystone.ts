@@ -25,7 +25,7 @@ export default withAuth(
         accessKeyId: process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID',
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'S3_SECRET_ACCESS_KEY',
         signed: { expiry: 5000 },
-        endpoint: 'https://libralite.s3.us-east-2.amazonaws.com/',
+        endpoint: 'libralite.s3.amazonaws.com',
       },
     },
   })
