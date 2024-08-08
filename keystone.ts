@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { config } from '@keystone-6/core';
 import { lists } from './schema';
 import { withAuth, session } from './auth';
-
+import uploadFile from './s3';
 export default withAuth(
   config({
     db: {
@@ -25,7 +25,7 @@ export default withAuth(
         accessKeyId: process.env.S3_ACCESS_KEY_ID || 'S3_ACCESS_KEY_ID',
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'S3_SECRET_ACCESS_KEY',
         signed: { expiry: 5000 },
-        endpoint: 'https://libralite.s3.us-east-2.amazonaws.com/'
+        endpoint: 'https://libralite.s3.us-east-2.amazonaws.com/',
       },
     },
   })
