@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,14 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // keystone.ts
@@ -51,7 +41,7 @@ var BookConfigList = {
     gender: (0, import_fields.relationship)({ ref: "Gender.books", many: false }),
     quantity: (0, import_fields.integer)({ defaultValue: 0 }),
     price: (0, import_fields.integer)({ defaultValue: 0 }),
-    image: (0, import_fields.image)({ storage: "my_local_images" }),
+    image: (0, import_fields.relationship)({ ref: "Image", many: true }),
     compras: (0, import_fields.relationship)({ ref: "Buy.libro", many: true }),
     publisher: (0, import_fields.relationship)({ ref: "Publisher.books", many: false }),
     reservations: (0, import_fields.relationship)({ ref: "Reservation.book", many: true })
@@ -210,7 +200,7 @@ var GenderConfigList = {
   fields: {
     name: (0, import_fields7.text)(),
     books: (0, import_fields7.relationship)({ ref: "Book.gender", many: true }),
-    image: (0, import_fields7.image)({ storage: "my_local_images" })
+    image: (0, import_fields7.relationship)({ ref: "Image", many: true })
   },
   access: import_access7.allowAll
 };
@@ -288,27 +278,11 @@ var session = (0, import_session.statelessSessions)({
 });
 
 // keystone.ts
-var import_dotenv = __toESM(require("dotenv"));
-import_dotenv.default.config();
-var {
-  // The S3 Bucket Name used to store assets
-  S3_BUCKET_NAME: bucketName = "keystone-test",
-  // The region of the S3 bucket
-  S3_REGION: region = "ap-southeast-2",
-  // The Access Key ID and Secret that has read/write access to the S3 bucket
-  S3_ACCESS_KEY_ID: accessKeyId = "keystone",
-  S3_SECRET_ACCESS_KEY: secretAccessKey = "keystone",
-  // The base URL to serve assets from
-  ASSET_BASE_URL: baseUrl = "http://localhost:3000"
-} = process.env;
 var keystone_default = withAuth(
   (0, import_core2.config)({
     db: {
-      // we're using sqlite for the fastest startup experience
-      //   for more information on what database might be appropriate for you
-      //   see https://keystonejs.com/docs/guides/choosing-a-database#title
       provider: "postgresql",
-      url: process.env.DATABASE_URL || "DATABASE_URL_TO_REPLACE"
+      url: process.env.DATABASE_PUBLIC_URL || "DATABASE_URL_TO_REPLACE"
     },
     lists,
     session,
@@ -318,20 +292,14 @@ var keystone_default = withAuth(
       maxFileSize: 200 * 1024 * 1024
     },
     storage: {
-      my_local_images: {
-        // Images that use this store will be stored on the local machine
-        kind: "local",
-        // This store is used for the image field type
-        type: "image",
-        // The URL that is returned in the Keystone GraphQL API
-        generateUrl: (path) => `${baseUrl}/images${path}`,
-        // The route that will be created in Keystone's backend to serve the images
-        serverRoute: {
-          path: "/images"
-        },
-        // Set serverRoute to null if you don't want a route to be created in Keystone
-        // serverRoute: null
-        storagePath: "public/images"
+      my_s3_files: {
+        kind: "s3",
+        type: "file",
+        bucketName: process.env.S3_BUCKET_NAME || "libralite",
+        region: process.env.S3_REGION || "us-east-2",
+        accessKeyId: process.env.S3_ACCESS_KEY_ID || "S3_ACCESS_KEY_ID",
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "S3_SECRET_ACCESS_KEY",
+        signed: { expiry: 5e3 }
       }
     }
   })

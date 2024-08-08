@@ -11,7 +11,7 @@ export const BookConfigList: ListConfig<any> = {
     gender: relationship({ ref: "Gender.books", many: false }),
     quantity: integer({ defaultValue: 0 }),
     price: integer({ defaultValue: 0 }),
-    image: file({ storage: 'my_s3_files' }),
+    image: relationship({ ref: 'Image', many: true }),
     compras: relationship({ ref: "Buy.libro", many: true }),
     publisher: relationship({ ref: "Publisher.books", many: false }), 
     reservations: relationship({ ref: "Reservation.book", many: true }),
