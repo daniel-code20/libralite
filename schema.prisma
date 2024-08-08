@@ -27,6 +27,7 @@ model Book {
   image_width      Int?
   image_height     Int?
   image_extension  String?
+  image_filename  String?
   compras          Buy[]         @relation("Buy_libro")
   publisher        Publisher?    @relation("Book_publisher", fields: [publisherId], references: [id])
   publisherId      String?       @map("publisher")
@@ -84,6 +85,7 @@ model Gender {
   image_width     Int?
   image_height    Int?
   image_extension String?
+  image_filename String?
 }
 
 model Publisher {
