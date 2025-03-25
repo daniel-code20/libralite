@@ -15,6 +15,7 @@ export const BookConfigList: ListConfig<any> = {
     compras: relationship({ ref: "Buy.libro", many: true }),
     publisher: relationship({ ref: "Publisher.books", many: false }), 
     reservations: relationship({ ref: "Reservation.book", many: true }),
+    reviews: relationship({ ref: "Review.book", many: true }),
   },
   access: allowAll,
 };

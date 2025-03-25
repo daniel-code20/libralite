@@ -44,7 +44,8 @@ var BookConfigList = {
     image: (0, import_fields.file)({ storage: "my_s3_files" }),
     compras: (0, import_fields.relationship)({ ref: "Buy.libro", many: true }),
     publisher: (0, import_fields.relationship)({ ref: "Publisher.books", many: false }),
-    reservations: (0, import_fields.relationship)({ ref: "Reservation.book", many: true })
+    reservations: (0, import_fields.relationship)({ ref: "Reservation.book", many: true }),
+    reviews: (0, import_fields.relationship)({ ref: "Review.book", many: true })
   },
   access: import_access.allowAll
 };
@@ -74,7 +75,8 @@ var UserConfigList = {
       }
     }),
     compras: (0, import_fields2.relationship)({ ref: "Buy.cliente", many: true }),
-    reservations: (0, import_fields2.relationship)({ ref: "Reservation.user", many: true })
+    reservations: (0, import_fields2.relationship)({ ref: "Reservation.user", many: true }),
+    reviews: (0, import_fields2.relationship)({ ref: "Review.user", many: true })
   },
   access: import_access2.allowAll
 };
@@ -173,8 +175,8 @@ var import_fields5 = require("@keystone-6/core/fields");
 var import_access5 = require("@keystone-6/core/access");
 var ReviewConfigList = {
   fields: {
-    book: (0, import_fields5.relationship)({ ref: "Book" }),
-    user: (0, import_fields5.relationship)({ ref: "User" }),
+    book: (0, import_fields5.relationship)({ ref: "Book.reviews" }),
+    user: (0, import_fields5.relationship)({ ref: "User.reviews" }),
     rating: (0, import_fields5.integer)({ defaultValue: 0 }),
     comment: (0, import_fields5.text)()
   },
@@ -281,8 +283,10 @@ var session = (0, import_session.statelessSessions)({
 var keystone_default = withAuth(
   (0, import_core2.config)({
     db: {
-      provider: "postgresql",
-      url: process.env.DATABASE_PUBLIC_URL || "DATABASE_URL_TO_REPLACE"
+      provider: "sqlite",
+      // Cambiado a SQLite
+      url: process.env.DATABASE_URL || "file:./dev.db"
+      // Cambiado a URL de SQLite
     },
     lists,
     session,

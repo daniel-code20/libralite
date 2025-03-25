@@ -16,6 +16,8 @@ type Book {
   publisher: Publisher
   reservations(where: ReservationWhereInput! = {}, orderBy: [ReservationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReservationWhereUniqueInput): [Reservation!]
   reservationsCount(where: ReservationWhereInput! = {}): Int
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
+  reviewsCount(where: ReviewWhereInput! = {}): Int
 }
 
 type FileFieldOutput {
@@ -43,6 +45,7 @@ input BookWhereInput {
   compras: BuyManyRelationFilter
   publisher: PublisherWhereInput
   reservations: ReservationManyRelationFilter
+  reviews: ReviewManyRelationFilter
 }
 
 input IDFilter {
@@ -67,13 +70,7 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 input NestedStringFilter {
@@ -124,6 +121,12 @@ input ReservationManyRelationFilter {
   none: ReservationWhereInput
 }
 
+input ReviewManyRelationFilter {
+  every: ReviewWhereInput
+  some: ReviewWhereInput
+  none: ReviewWhereInput
+}
+
 input BookOrderByInput {
   id: OrderDirection
   title: OrderDirection
@@ -150,6 +153,7 @@ input BookUpdateInput {
   compras: BuyRelateToManyForUpdateInput
   publisher: PublisherRelateToOneForUpdateInput
   reservations: ReservationRelateToManyForUpdateInput
+  reviews: ReviewRelateToManyForUpdateInput
 }
 
 input AuthorRelateToOneForUpdateInput {
@@ -191,6 +195,13 @@ input ReservationRelateToManyForUpdateInput {
   connect: [ReservationWhereUniqueInput!]
 }
 
+input ReviewRelateToManyForUpdateInput {
+  disconnect: [ReviewWhereUniqueInput!]
+  set: [ReviewWhereUniqueInput!]
+  create: [ReviewCreateInput!]
+  connect: [ReviewWhereUniqueInput!]
+}
+
 input BookUpdateArgs {
   where: BookWhereUniqueInput!
   data: BookUpdateInput!
@@ -208,6 +219,7 @@ input BookCreateInput {
   compras: BuyRelateToManyForCreateInput
   publisher: PublisherRelateToOneForCreateInput
   reservations: ReservationRelateToManyForCreateInput
+  reviews: ReviewRelateToManyForCreateInput
 }
 
 input AuthorRelateToOneForCreateInput {
@@ -235,6 +247,11 @@ input ReservationRelateToManyForCreateInput {
   connect: [ReservationWhereUniqueInput!]
 }
 
+input ReviewRelateToManyForCreateInput {
+  create: [ReviewCreateInput!]
+  connect: [ReviewWhereUniqueInput!]
+}
+
 type User {
   id: ID!
   name: String
@@ -246,6 +263,8 @@ type User {
   comprasCount(where: BuyWhereInput! = {}): Int
   reservations(where: ReservationWhereInput! = {}, orderBy: [ReservationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReservationWhereUniqueInput): [Reservation!]
   reservationsCount(where: ReservationWhereInput! = {}): Int
+  reviews(where: ReviewWhereInput! = {}, orderBy: [ReviewOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ReviewWhereUniqueInput): [Review!]
+  reviewsCount(where: ReviewWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -270,6 +289,7 @@ input UserWhereInput {
   role: StringNullableFilter
   compras: BuyManyRelationFilter
   reservations: ReservationManyRelationFilter
+  reviews: ReviewManyRelationFilter
 }
 
 input DateTimeNullableFilter {
@@ -294,7 +314,6 @@ input StringNullableFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: StringNullableFilter
 }
 
@@ -314,6 +333,7 @@ input UserUpdateInput {
   role: String
   compras: BuyRelateToManyForUpdateInput
   reservations: ReservationRelateToManyForUpdateInput
+  reviews: ReviewRelateToManyForUpdateInput
 }
 
 input UserUpdateArgs {
@@ -329,6 +349,7 @@ input UserCreateInput {
   role: String
   compras: BuyRelateToManyForCreateInput
   reservations: ReservationRelateToManyForCreateInput
+  reviews: ReviewRelateToManyForCreateInput
 }
 
 type Author {
@@ -959,6 +980,11 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
 enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
   form
   sidebar
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 type KeystoneAdminUIFieldGroupMeta {

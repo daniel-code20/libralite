@@ -6,8 +6,8 @@ import { withAuth, session } from './auth';
 export default withAuth(
   config({
     db: {
-      provider: 'postgresql',
-      url: process.env.DATABASE_PUBLIC_URL || 'DATABASE_URL_TO_REPLACE',
+      provider: 'sqlite',  // Cambiado a SQLite
+      url: process.env.DATABASE_URL || 'file:./dev.db',  // Cambiado a URL de SQLite
     },
     lists,
     session,

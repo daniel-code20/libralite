@@ -35,6 +35,7 @@ export const UserConfigList: ListConfig<any> = {
 
     compras: relationship({ ref: "Buy.cliente", many: true }),
     reservations: relationship({ ref: "Reservation.user", many: true }),
+    reviews: relationship({ ref: "Review.user", many: true }),
   },
   access: allowAll,
 };
